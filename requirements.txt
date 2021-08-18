@@ -1,0 +1,6 @@
+discord.py
+psycopg2
+pytz
+requests
+langid
+cryptography

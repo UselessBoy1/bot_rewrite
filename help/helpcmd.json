@@ -1,0 +1,111 @@
+{
+  "link": {
+    "protection": "N",
+    "brief": "wysyla link",
+    "description": "%prefix%link <nazwa klasy> <przedmiot>",
+    "fields": {
+      "<nazwa klasy>": "(opcjonalne) nazwa klasy (np. ika)",
+      "<przedmiot>": "(opcjonalne) pierwsze trzy litery nazwy predmiotu (np. INF, ANG, JUST,...)",
+      "Info": "Bez podawania <nazwy klasy> i <przedmotu> komenda musi byc na czacie klasy (tam gdzie bot wysyla linki)",
+      "Przyklady": "%prefix%link\n%prefix%link ang\n%prefix%link ika\n%prefix%link ika ang"
+    }
+  },
+
+  "plan": {
+    "protection": "N",
+    "brief": "wysyla plan",
+    "description": "%prefix%plan <nazwa klasy>",
+    "fields": {
+      "<nazwa klasy>": "(opcjonalne) nazwa klasy (np. ika)",
+      "Info": "Bez podawania <nazwy klasy> komenda musi byc na czacie klasy (tam gdzie bot wysyla linki)",
+      "Przyklady": "%prefix%plan\n%prefix%plan ika"
+    }
+  },
+
+  "meme": {
+    "protection": "N",
+    "brief": "meme lol",
+    "description": "%prefix%meme wysyla mema z losowego subreddita",
+    "fields": {}
+  },
+
+  "move": {
+    "protection": "STRAZNIK",
+    "brief": "przenosi na wybrany kanal",
+    "description": "Przenosi wszystkich z vc callera do wybarnego vc",
+    "fields": {
+      "Syntax": "%prefix%move <#ID>",
+      "<#ID>": "ID to id kanalu glosowego: https://youtu.be/6dqYctHmazc",
+      "Przyklad": "%prefix%move <#768191779300180018>"
+    }
+  },
+
+  "sql": {
+    "protection": "DEV",
+    "brief": "-",
+    "description": "%prefix%sql <sql query>",
+    "fields": {
+      "Info": "Zapisuje od razu wszystko"
+    }
+  },
+
+  "config": {
+    "protection": "ADMIN",
+    "brief": "-",
+    "description": "%prefix%config <col name> <new val> <is int>",
+    "fields": {
+      "Info v1": "Bez podania argumentow wysyla liste dostepnych <col name>",
+      "Info v2": "Z samym <col name> resetuje wartosc <col name>",
+      "<is int>": "0 albo 1, 0 jezeli to tekst, 1 jezeli liczba"
+    }
+  },
+
+  "exec": {
+    "protection": "DEV",
+    "brief": "-",
+    "description": "%prefix%exec <code>",
+    "fields": {}
+  },
+
+  "show_reddit": {
+    "protection": "ADMIN",
+    "brief": "-",
+    "description": "pokazuje wpisane subreddity do %prefix%meme",
+    "fields": {}
+  },
+
+  "add_reddit": {
+    "protection": "ADMIN",
+    "brief": "-",
+    "description": "dodaje subreddita do %prefix%meme (wpisz nazwe bez r/)",
+    "fields": {}
+  },
+
+  "del_reddit": {
+    "protection": "ADMIN",
+    "brief": "-",
+    "description": "usuwa subreddita z %prefix%meme (wpisz nazwe bez r/)",
+    "fields": {}
+  },
+
+  "show_table": {
+    "protection": "DEV",
+    "brief": "-",
+    "description": "%prefix%show_table <table name>",
+    "fields": {}
+  },
+
+  "dhelp": {
+    "protection": "DEV",
+    "brief": "helps dev",
+    "description": "%prefix%dhelp <permission name> - shows help for this permission",
+    "fields": {}
+  },
+
+  "help": {
+    "protection": "N",
+    "brief": "shows help",
+    "description": "shows help",
+    "fields": {}
+  }
+}

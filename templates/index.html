@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <form action="add" method="post">
+        <select class="fElements" id="sc" name="sc" required></select><br>
+        <input class="fElements" id="date" type="date" name="date" required><br>
+        <label id="d_label">Wybierz date</label><br>
+        <select class="fElements" id="lessons" name="lessons" required></select><br>
+        <input class="fElements" type="text" name="text" autocomplete="off" required><br>
+        <input class="fElements" id="weekday" type="hidden" name="weekday">
+        <input class="fElements" type="submit">
+    </form>
+    <div id="toast"></div>
+    <script src="{{ url_for('static', filename='js/tools.js') }}"></script>
+    {% if msg %}
+    <script>toast('{{ msg }}')</script>
+    {% endif %}
+    <script>
+    let plan_str = "{{ plan }}".replaceAll("&#39;", "\"");
+    var plan = JSON.parse(plan_str);
+    </script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
+</html>

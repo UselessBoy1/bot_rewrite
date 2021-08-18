@@ -1,0 +1,55 @@
+body {
+    margin-top: 10px;
+    text-align: center;
+    background-color: #444;
+    color: #fff;
+    font-family: 'Source Code Pro', 'Courier New', Courier, monospace;
+}
+
+.fElements {
+    background-color: #222;
+    color: #fff;
+    border: #222 solid 1px;
+    padding: 5px;
+    border-radius: 10px;
+    margin: 5px 5px;
+    width: 250px;
+    box-sizing: border-box;
+    font-family: 'Source Code Pro', 'Courier New', Courier, monospace;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator{
+    filter: invert(1);
+}
+
+/* The toast - position it at the bottom and in the middle of the screen */
+#toast {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px; /* Divide value of min-width by 2 */
+    background-color: #111;
+    color: #fff;
+    text-align: center;
+    border-radius: 32px;
+    padding: 16px;
+    position: fixed; /* Sit on top of the screen */
+    z-index: 1;
+    left: 50%; /* Center the toast */
+    bottom: 30px; /* 30px from the bottom */
+}
+
+/* Show the toast when clicking on a button (class added with JavaScript) */
+#toast.show {
+    visibility: visible; 
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the toast in and out */
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}

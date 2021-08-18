@@ -1,0 +1,87 @@
+{
+  "plan":
+  [
+    [
+      ["ANG", "JUST"],
+      ["FIZ"],
+      ["EDB"],
+      ["HIS"],
+      ["MAT"],
+      ["MAT"]
+    ],
+    [
+      ["CHE"],
+      ["NIE G", "NIE L"],
+      ["REL"],
+      ["MAT"],
+      ["GEO"],
+      ["WF"]
+    ],
+    [
+      ["-"],
+      ["-"],
+      ["NIE G", "NIE L"],
+      ["POL"],
+      ["BIO"],
+      ["WOS"]
+    ],
+    [
+      ["ZZW"],
+      ["MAT"],
+      ["REL"],
+      ["FIZ"],
+      ["POL"],
+      ["POL"],
+      ["HIS"]
+    ],
+    [
+      ["POL"],
+      ["MAT"],
+      ["WF"],
+      ["ANG", "INF"],
+      ["ANG", "INF"],
+      ["INF", "JUST"],
+      ["INF", "JUST"],
+      ["PLA"]
+    ],
+    [
+      ["-"]
+    ],
+    [
+      ["-"]
+    ]
+  ],
+
+  "links":
+  {
+    "GEO": "https://lo8poznan.webex.com/meet/maria.aleszczyk",
+    "ANG": "https://lo8poznan.webex.com/meet/agnieszka.mazurek",
+    "JUST": "https://lo8poznan.webex.com/meet/katarzyna.manczak",
+    "HIS": "https://lo8poznan.webex.com/meet/juliusz.kaczanowski",
+    "WOS": "https://lo8poznan.webex.com/meet/juliusz.kaczanowski",
+    "FIZ": "https://lo8poznan.webex.com/meet/justyna.lodyga",
+    "MAT": "https://lo8poznan.webex.com/meet/eliza.baranowska",
+    "CHE": "https://lo8poznan.webex.com/lo8poznan/j.php?MTID=mc4a9fc2930f19795c37f6e779140dbf8",
+    "POL": "https://lo8poznan.webex.com/meet/aneta.cierechowicz",
+    "NIE G": "https://lo8poznan.webex.com/meet/magdalena.zmudzinska",
+    "NIE L": "https://lo8poznan.webex.com/meet/kinga.jankowska",
+    "ZZW": "https://lo8poznan.webex.com/meet/alina.gosciniak",
+    "INF": "https://lo8poznan.webex.com/meet/alina.gosciniak",
+    "REL": "https://lo8poznan.webex.com/meet/marcin.skowron",
+    "WF": "https://meetingsemea30.webex.com/meetingsemea30/j.php?MTID=m4afdcc7be7d11dba2334c48baf98e58f",
+    "BIO": "https://lo8poznan.webex.com/meet/katarzyna.wasielewska",
+    "PLA": "https://meetingsemea35.webex.com/meet/pr1752835001",
+    "EDB": "https://lo8poznan.webex.com/lo8poznan-en/j.php?MTID=m044c9bbf5fdcda2a4f14ab1e67722fb7"
+  },
+
+  "channel_id": 834810156926631976,
+
+  "email":
+  {
+    "host": "gAAAAABhGWZMhRAMovuY-UhejCiVJGyDMVxaZTyURf4-mXXeVXOupbPbURhpYCHbuj-KPCMLZ4Ovrkw9kzbj4gJ4j9DTSV649OeeY0LcN2FcGinEnRPyYcY=",
+    "mail": "gAAAAABhGWZM0CLYIf4eIIqx6N1a5CmOet1abUPUSlNfWvRnsVXrwwP9_WdNQ0YBZyO440Ew8mA_0rhOJfjIPNGeoJoACSAH3DQ2q_tn-2oMuJJ7-EzEPvbt9y0WrOx_bBbHEGnVaEdh",
+    "password": "gAAAAABhGWZMU4ugH588KxzDUZu2NsMf9fdfbVfGlxgA1YLTm7X1Qag74ikEYK4kx5uBgusk1h9ItZ6wz-y66A5_smI4hCjYhg==",
+    "port": 993,
+    "ssl": true
+  }
+}
