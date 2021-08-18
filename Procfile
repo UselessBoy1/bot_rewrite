@@ -1,1 +1,2 @@
-web: python bot.py
+worker: python bot.py
+web: gunicorn wsgi:app
