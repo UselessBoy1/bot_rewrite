@@ -10,7 +10,7 @@ from discord.ext import commands
 from os.path import isfile, join
 from tools import database, misc, config
 
-CMD_PREFIXES = ["t?", "T?"]
+CMD_PREFIXES = ["c?", "C?"]
 pending_index = -1
 
 def get_cogs():
