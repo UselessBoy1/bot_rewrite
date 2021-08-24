@@ -317,6 +317,11 @@ class LessonBot(commands.Cog):
                     return index_from_channel # if 'plan <class name>' and cant find class name but can class channel
             return index_from_name  # if 'plan <class name>' and can find class name
 
+    async def set_current_date(self):
+        now = misc.get_now()
+        date = f"📅Data: {str(now.day).zfill(2)}.{str(now.month).zfill(2)}.{now.year}"  # change channel name to current date
+        await self.bot.get_channel(config.v['DATE_CHANNEL']).edit(name=date)
+
     #endregion
 
     #region TASKS
@@ -325,10 +330,12 @@ class LessonBot(commands.Cog):
     async def check_everything(self):
         # wait to whole minute
         now = misc.get_now()
+        await self.set_current_date()
         now_ = datetime.datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute, second=1)
         whole = (now_ + datetime.timedelta(minutes=1)).timestamp()
         waiting_time = whole - now.timestamp()
         await asyncio.sleep(waiting_time)
+        await self.set_current_date()
         while True:
             # call check_everything() function
             for sc in self.school_classes:
@@ -338,7 +345,7 @@ class LessonBot(commands.Cog):
 
     @tasks.loop(hours=24)
     async def refresh(self):
-        now = misc.get_now()
+
         midnight = int(86400 - (now.hour * 3600 + now.minute * 60 + now.second)) #seconds to midnight
         await asyncio.sleep(midnight)
         now = misc.get_now()
