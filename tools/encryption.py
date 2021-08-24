@@ -1,5 +1,6 @@
-from cryptography.fernet import Fernet
 import os
+
+from cryptography.fernet import Fernet
 
 key = os.environ['KEY'].encode("ASCII")
 

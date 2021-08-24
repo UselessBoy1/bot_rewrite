@@ -1,12 +1,14 @@
 import discord
-from os.path import join, exists
 import json
+
+from os.path import join, exists
+from discord.ext.commands import Bot
 from tools.misc import check_dict
 from tools import config, misc
 
-def get_help_embed(bot, cmd):
+def get_help_embed(bot :Bot, cmd):
     path = join("help", "helpcmd.json")
-    prefix = bot.cmd_prefixes[0]
+    prefix = bot.command_prefix[0]
     color = config.v['HELP_COLOR']
     if exists(path):
         with open(path) as f:

@@ -1,6 +1,7 @@
 import json
-from tools import misc
 import langid
+
+from tools import misc
 
 if __name__ == "__main__":
     raise Exception()
