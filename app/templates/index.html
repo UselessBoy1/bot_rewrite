@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Server Bot Configuration Page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <form action="add" method="post">
@@ -14,12 +16,15 @@
         <input class="fElements" id="weekday" type="hidden" name="weekday">
         <input class="fElements" type="submit">
     </form>
+    <div id="tasks"></div>
     <div id="toast"></div>
     <script src="{{ url_for('static', filename='js/tools.js') }}"></script>
     {% if msg %}
     <script>toast('{{ msg }}')</script>
     {% endif %}
     <script>
+    let tasks_str = "{{ tasks }}".replaceAll("&#39;", "\"");
+    var tasks = JSON.parse(tasks_str);
     let plan_str = "{{ plan }}".replaceAll("&#39;", "\"");
     var plan = JSON.parse(plan_str);
     </script>

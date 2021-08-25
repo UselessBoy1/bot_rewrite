@@ -4,6 +4,7 @@ import discord
 import json
 import os
 from os.path import  isfile, join
+from tools import encryption
 
 if __name__ == "__main__":
     raise Exception()
@@ -13,11 +14,15 @@ class Task:
     epoch = 0
     lesson = ""
     msg = ""
-    def __init__(self, channel_id, epoch, lesson, msg):
+    def __init__(self, channel_id, epoch, lesson, msg :str):
         self.channel_id = int(channel_id)
         self.epoch = int(epoch)
         self.lesson = lesson
-        self.msg = msg
+        self.msg = encryption.decrypt(msg.encode("UTF-8"))
+
+    def __str__(self):
+        return f"[{self.epoch}, {self.msg}]"
+
 
 class Subreddit:
     name = ""

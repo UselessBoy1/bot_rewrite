@@ -1,6 +1,7 @@
 var select_sc = document.querySelector('#sc');
 var select_lesson = document.querySelector('#lessons');
 var date_input = document.querySelector("#date")
+var tasks_div = document.querySelector("#tasks")
 
 const createSC = () => {
     select_sc.innerHTML = "";
@@ -10,6 +11,37 @@ const createSC = () => {
         option.text = key.toUpperCase();
         select_sc.appendChild(option);
     });
+}
+
+const pad = (str, size) => {
+    while(str.length < size) str = "0" + str;
+    return str;
+}
+
+const formatDate = (date) => {
+    let minute = "" + date.getMinutes();
+    let hour = "" + date.getHours();
+    let day = "" + date.getDay();
+    let month = "" + date.getMonth();
+    let year = "" + date.getFullYear();
+    
+    return pad(hour, 2) + ":" + pad(minute, 2) + " " + pad(day, 2) + "." + pad(month, 2) + "." + year, 2
+}
+
+const createTasks = () => {
+    tasks_div.innerHTML = "";
+    console.log(tasks);
+    Object.keys(tasks).forEach(key => {
+        console.log(key);
+        tasks[key].forEach(task => {
+            let p = document.createElement("p");
+            var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
+            // d.getHo
+            d.setUTCSeconds(task[0]);
+            p.innerText = key + " - " + formatDate(d) + " - " + task[1];
+            tasks_div.appendChild(p);
+        });
+    })
 }
 
 const createLessons = (weekday) => {
@@ -68,10 +100,6 @@ const setDLabelText = (date, weekday) => {
     document.querySelector("#d_label").innerHTML = str;
 }
 
-onload = () => {
-    createSC();
-}
-
 date_input.addEventListener('change', () => {
     let v = date_input.value;
     let d = new Date(v);
@@ -83,3 +111,10 @@ date_input.addEventListener('change', () => {
     setDLabelText(d, weekday);
     createLessons(weekday);
 })
+
+onload = () => {
+    createSC();
+    createTasks();
+}
+
+

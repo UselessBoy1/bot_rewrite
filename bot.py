@@ -2,16 +2,12 @@ import discord
 import os
 import traceback
 import sys
-import threading
-import asyncio
-import datetime
 
 from discord.ext import commands
 from os.path import isfile, join
 from tools import database, misc, config
 
 CMD_PREFIXES = ["c?", "C?"]
-pending_index = -1
 
 def get_cogs():
     for f in os.listdir("cogs"):
@@ -39,17 +35,9 @@ if __name__ == "__main__":
 
     bot = commands.Bot(command_prefix=CMD_PREFIXES, intents=discord.Intents.all(), help_command=None)
 
-
     @bot.event
     async def on_ready():
         misc.log("READY")
-
-
-    @bot.event
-    async def on_pending_reminder_set(reminder):
-        global pending_index
-        pending_index = reminder.index
-
 
     load_cogs(bot)
     token = os.environ["TOKEN"]
