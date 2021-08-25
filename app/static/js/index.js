@@ -25,7 +25,7 @@ const formatDate = (date) => {
     let month = "" + date.getMonth();
     let year = "" + date.getFullYear();
     
-    return pad(hour, 2) + ":" + pad(minute, 2) + " " + pad(day, 2) + "." + pad(month, 2) + "." + year, 2
+    return pad(hour, 2) + ":" + pad(minute, 2) + " " + pad(day, 2) + "." + pad(month, 2) + "." + year
 }
 
 const createTasks = () => {
