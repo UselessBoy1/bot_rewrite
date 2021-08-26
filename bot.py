@@ -32,7 +32,7 @@ def create_default_tables():
 
 def bot_run(loop):
     asyncio.set_event_loop(loop)
-    
+
     create_default_tables()
 
     bot = commands.Bot(command_prefix=CMD_PREFIXES, intents=discord.Intents.all(), help_command=None)
@@ -48,4 +48,5 @@ def bot_run(loop):
 
 if __name__ == "__main__":
     bot_run(asyncio.get_event_loop())
+    os.system("gunicorn wsgi:app")
 
