@@ -54,7 +54,7 @@ def add():
         lesson_num, lesson_index = [int(x) for x in request.form['lessons'].split('.')]
         year, month, day = [int(x) for x in request.form['date'].split("-")]
         flash(f"Zapisano {request.form['text']} {plans[school_class][weekday][lesson_num][lesson_index]} {request.form['date']}")
-        datetime_epoch = datetime.datetime(year, month, day, config.LESSON_TIMES[lesson_num][0], config.LESSON_TIMES[lesson_num][1]).timestamp()
+        datetime_epoch = datetime.datetime(year=year,month=month, day=day,hour=config.LESSON_TIMES[lesson_num][0],minute=config.LESSON_TIMES[lesson_num][1]).timestamp()
         crypto = encryption.encrypt(request.form['text']).decode("UTF-8")
 
         db.add_to_table("tasks", "channel_id, epoch, lesson, msg", f"'{school_classes[school_class]['channel_id']}', '{int(datetime_epoch)}', '{school_class}', '{crypto}'")

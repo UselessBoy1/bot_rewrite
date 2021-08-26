@@ -29,12 +29,14 @@ class Database:
         self.__start_conn()
         try:
             self.cursor.execute(sql_query)
-            results = self.cursor.fetchall()
-            output = results
+            try:
+                results = self.cursor.fetchall()
+                output = results
+            except psycopg2.ProgrammingError:
+                output = ""
         except psycopg2.Error as e:
             output = f"{e}"
-        finally:
-            self.__end_conn_and_save()
+        self.__end_conn_and_save()
         return output
 
 

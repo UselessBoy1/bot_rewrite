@@ -1,59 +1,64 @@
-var select_sc = document.querySelector('#sc');
+var select_school_class = document.querySelector('#sc');
 var select_lesson = document.querySelector('#lessons');
 var date_input = document.querySelector("#date")
 var tasks_div = document.querySelector("#tasks")
 
-const createSC = () => {
-    select_sc.innerHTML = "";
-    Object.keys(plan).forEach(key => {
-        let option = document.createElement("option");
-        option.value = key;
-        option.text = key.toUpperCase();
-        select_sc.appendChild(option);
+var selected_school_class = undefined;
+
+const createSchoolClassesOptions = () => {
+    select_school_class.innerHTML = "";
+    Object.keys(plans).forEach(school_plan_name => {
+        let option_node = document.createElement("option");
+        option_node.value = school_plan_name;
+        option_node.text = school_plan_name.toUpperCase();
+        option_node.onselect = () => {
+            selected_school_class = option.text.toLowerCase();
+        }
+        select_school_class.appendChild(option_node);
     });
 }
 
-const pad = (str, size) => {
+const zfill = (str, size) => {
+    str = "" + str
     while(str.length < size) str = "0" + str;
     return str;
 }
 
-const formatDate = (date) => {
-    let minute = "" + date.getMinutes();
-    let hour = "" + date.getHours();
-    let day = "" + date.getDay();
-    let month = "" + date.getMonth();
-    let year = "" + date.getFullYear();
+const formateDate = (date) => {
+    let minute = date.getMinutes();
+    let hour = date.getHours();
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
     
-    return pad(hour, 2) + ":" + pad(minute, 2) + " " + pad(day, 2) + "." + pad(month, 2) + "." + year
+    return zfill(hour, 2) + ":" + zfill(minute, 2) + " " + zfill(day, 2) + "." + zfill(month, 2) + "." + year
 }
 
-const createTasks = () => {
+const createTasksView = () => {
     tasks_div.innerHTML = "";
     console.log(tasks);
-    Object.keys(tasks).forEach(key => {
-        console.log(key);
-        tasks[key].forEach(task => {
-            let p = document.createElement("p");
-            var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
-            // d.getHo
-            d.setUTCSeconds(task[0]);
-            p.innerText = key + " - " + formatDate(d) + " - " + task[1];
-            tasks_div.appendChild(p);
+    Object.keys(tasks).forEach(task => {
+        console.log(task);
+        tasks[task].forEach(task_element => {
+            let p_node = document.createElement("p");
+            let date = new Date(0);
+            date.setUTCSeconds(task_element[0]);
+            p_node.innerText = task + " - " + formateDate(date) + " - " + task_element[1];
+            tasks_div.appendChild(p_node);
         });
     })
 }
 
 const createLessons = (weekday) => {
     select_lesson.innerHTML = "";
-    let selected = select_sc.options[select_sc.selectedIndex].value;
-    let selected_plan = plan[selected];
-    let day = selected_plan[weekday];
-    day.forEach((lesson_set, index) => {
-        lesson_set.forEach((lesson, l_index) => {
+    let selected_lesson = select_school_class.options[select_school_class.selectedIndex].value;
+    let selected_plan = plans[selected_lesson];
+    let selected_day = selected_plan[weekday];
+    selected_day.forEach((lesson_set, index) => {
+        lesson_set.forEach((lesson, lesson_index) => {
             if(lesson != '-'){
                 let option = document.createElement('option');
-                option.value = index + "." + l_index;
+                option.value = index + "." + lesson_index;
                 option.text = lesson;
                 select_lesson.appendChild(option);   
             }
@@ -61,38 +66,38 @@ const createLessons = (weekday) => {
     });
 }
 
-const getWeekNo = (date) => {
+const getWeekNumber = (date) => {
     return Math.ceil((((date.getTime() - (new Date(date.getFullYear(), 0, 1)).getTime())/ 86400000) + 1) / 7)
 }
 
-const getWeekNoDifference = (date1, date2) => {
-    return Math.abs(getWeekNo(date1) - getWeekNo(date2));
+const getWeekNumbersDifference = (date1, date2) => {
+    return Math.abs(getWeekNumber(date1) - getWeekNumber(date2));
 }
 
-const setDLabelText = (date, weekday) => {
-    let weekdays = ["Poniedzialek", "Wtorek", "Sroda", "Czwartek", "Piatek", "Sobota", "Niedziela"];
-    let dif = getWeekNoDifference(date, new Date());
+const setDateLabelText = (date, weekday) => {
+    let weekdays_names = ["Poniedzialek", "Wtorek", "Sroda", "Czwartek", "Piatek", "Sobota", "Niedziela"];
+    let difference = getWeekNumbersDifference(date, new Date());
     let str = "";
-    switch(dif){
+    switch(difference){
         case 0:
-            str = weekdays[weekday] + " w tym tygodniu";
+            str = weekdays_names[weekday] + " w tym tygodniu";
             break;
         case 1:
-            str = weekdays[weekday] + " w nastepnym tygodniu"
+            str = weekdays_names[weekday] + " w nastepnym tygodniu"
             break;
         default:
-            str = weekdays[weekday] + " za " + (dif) + " " + getPLEnd("tydzien", dif);
+            str = weekdays_names[weekday] + " za " + (difference) + " " + getPLEnd("tydzien", difference);
             break;
     }
-    let d = new Date();
-    d.setUTCHours(0);
-    d.setUTCMinutes(0);
-    d.setUTCSeconds(0);
-    d.setUTCMilliseconds(0);
-    if(date.getTime() == d.getTime()){
+    let current_date = new Date();
+    current_date.setUTCHours(0);
+    current_date.setUTCMinutes(0);
+    current_date.setUTCSeconds(0);
+    current_date.setUTCMilliseconds(0);
+    if(current_date.getTime() == date.getTime()){
         str = "Dzisiaj";
     }
-    if(date.getTime() < d.getTime()){
+    if(date.getTime() < current_date.getTime()){
         date_input.value = undefined;
         toast("Nie mozesz wybrac tej daty!");
         str = "Wybierz date"
@@ -101,20 +106,20 @@ const setDLabelText = (date, weekday) => {
 }
 
 date_input.addEventListener('change', () => {
-    let v = date_input.value;
-    let d = new Date(v);
-    let weekday = d.getDay() - 1;
+    let selected_value = date_input.value;
+    let date = new Date(selected_value);
+    let weekday = date.getDay() - 1;
     if(weekday == -1){
         weekday = 6;
     }
     document.querySelector("#weekday").value = weekday;
-    setDLabelText(d, weekday);
+    setDateLabelText(date, weekday);
     createLessons(weekday);
 })
 
 onload = () => {
-    createSC();
-    createTasks();
+    createSchoolClassesOptions();
+    createTasksView();
 }
 
 

@@ -25,8 +25,8 @@
     <script>
     let tasks_str = "{{ tasks }}".replaceAll("&#39;", "\"");
     var tasks = JSON.parse(tasks_str);
-    let plan_str = "{{ plan }}".replaceAll("&#39;", "\"");
-    var plan = JSON.parse(plan_str);
+    let plans_str = "{{ plan }}".replaceAll("&#39;", "\"");
+    var plans = JSON.parse(plans_str);
     </script>
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
