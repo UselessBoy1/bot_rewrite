@@ -2,6 +2,7 @@ import discord
 import os
 import traceback
 import sys
+import asyncio
 
 from discord.ext import commands
 from os.path import isfile, join
@@ -29,8 +30,8 @@ def create_default_tables():
     db.create_table("config", "namex TEXT, valuex TEXT, isint INTEGER")
     db.create_table("reddit", "followed TEXT")
 
-
-if __name__ == "__main__":
+def bot_run(loop):
+    asyncio.set_event_loop(loop)
     create_default_tables()
 
     bot = commands.Bot(command_prefix=CMD_PREFIXES, intents=discord.Intents.all(), help_command=None)
@@ -42,4 +43,8 @@ if __name__ == "__main__":
     load_cogs(bot)
     token = os.environ["TOKEN"]
     bot.run(token, bot=True, reconnect=True)
+
+
+if __name__ == "__main__":
+    bot_run(asyncio.get_event_loop())
 
