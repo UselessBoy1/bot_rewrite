@@ -30,7 +30,7 @@ def create_default_tables():
     db.create_table("config", "namex TEXT, valuex TEXT, isint INTEGER")
     db.create_table("reddit", "followed TEXT")
 
-def bot_run(loop):
+def run_bot(loop):
     asyncio.set_event_loop(loop)
 
     create_default_tables()
@@ -47,5 +47,5 @@ def bot_run(loop):
 
 
 if __name__ == "__main__":
-    bot_run(asyncio.get_event_loop())
+    run_bot(asyncio.get_event_loop())
 

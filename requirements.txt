@@ -5,4 +5,3 @@ requests
 langid
 cryptography
 flask
-gunicorn
