@@ -48,5 +48,4 @@ def bot_run(loop):
 
 if __name__ == "__main__":
     bot_run(asyncio.get_event_loop())
-    os.system("gunicorn wsgi:app")
 
