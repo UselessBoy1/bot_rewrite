@@ -10,6 +10,7 @@ from tools import database, misc, config
 
 CMD_PREFIXES = ["c?", "C?"]
 
+
 def get_cogs():
     for f in os.listdir("cogs"):
         if isfile(join("cogs", f)) and not f.startswith("_"):
@@ -40,6 +41,7 @@ async def run_bot_async(loop):
 
     @bot.event
     async def on_ready():
+        await bot.change_presence(activity=None, status=discord.Status.online)
         misc.log("READY")
 
     load_cogs(bot)
