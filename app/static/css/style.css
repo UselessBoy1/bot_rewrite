@@ -109,6 +109,10 @@ pre {
     align-items: center;
 }
 
+[contenteditable] {
+    outline: 0px solid transparent;
+}
+
 .infinite-load {
     position: fixed;
     left: 50%;

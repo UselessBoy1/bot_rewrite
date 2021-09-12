@@ -138,11 +138,9 @@ def end_save():
         return Response(status=403)
     site = db.get_table('site')
     num = len(site)
-    print(num)
     x = 0
     for t in tmp_save:
         code = t[1].replace("'", "''")
-        print(code)
         if x < num:
             db.replace_in_table('site', ['type', 'valuex'], [f"'{t[0]}'", f"'{code}'"], where=f'id={x}')
             x+=1

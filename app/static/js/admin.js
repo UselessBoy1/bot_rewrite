@@ -24,7 +24,7 @@ document.querySelector('#save').addEventListener('click', () => {
                     xhr.onload = () => {
                         ready = true;
                     };
-                    xhr.send('code='.concat(child.childNodes[0].childNodes[0].innerText));
+                    xhr.send('code='.concat(child.childNodes[1].childNodes[0].childNodes[0].innerText));
                     ready = false;
                 }
                 else 
@@ -33,7 +33,7 @@ document.querySelector('#save').addEventListener('click', () => {
                     xhr.onload = () => {
                         ready = true;
                     };
-                    xhr.send('text='.concat(child.innerText));
+                    xhr.send('text='.concat(child.childNodes[1].innerText));
                     ready = false;
                 }
             }
