@@ -30,6 +30,7 @@ def create_default_tables():
     db.create_table("tasks", "channel_id TEXT, epoch TEXT, lesson TEXT, msg TEXT")
     db.create_table("config", "namex TEXT, valuex TEXT, isint INTEGER")
     db.create_table("reddit", "followed TEXT")
+    db.create_table("site", "id INTEGER, type TEXT, valuex TEXT")
 
 
 async def run_bot_async(loop):

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Server Bot Configuration Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/prism.css') }}">
+    <link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">
+    <script src="{{ url_for('static', filename='js/tools.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/add.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/admin.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/prism.js') }}" defer></script>
+</head>
+<body>
+     <div class="navBar">
+        <a href="/" class="navBtn">HOME</a>
+        <a href="infa" class="navBtn">INFA</a>
+        <a href="logout" class="navBtn">LOGOUT</a>
+    </div>
+    <div class="admin-div">
+        <div class="article">
+
+        </div>
+        <div class="edit-btn">
+            <button class="chooseBtn" id="addTxt">Tt</button>
+            <button class="chooseBtn" id="addCode">&lt;/&gt;</button>
+            <button class="chooseBtn" id="save">save</button>
+        </div>
+        <form action="sendadd" method="post">
+            <select class="formElements" id="sc" name="sc" required></select><br>
+            <input class="formElements" id="date" type="date" name="date" required><br>
+            <label id="date_label">Wybierz date</label><br>
+            <select class="formElements" id="lessons" name="lessons" required></select><br>
+            <input class="formElements" type="text" name="text" autocomplete="off" required><br>
+            <input class="formElements" id="weekday" type="hidden" name="weekday">
+            <input class="formElements" type="submit">
+        </form>
+    <div id="tasks"></div>
+    </div>
+    <div id="toast"></div>
+    {% if msg %}
+    <script>toast('{{ msg }}')</script>
+    {% endif %}
+    <script>
+    let tasks_str = "{{ tasks }}".replaceAll("&#39;", "\"");
+    var tasks = JSON.parse(tasks_str);
+    let plans_str = "{{ plan }}".replaceAll("&#39;", "\"");
+    var plans = JSON.parse(plans_str);
+    function generateInfa(){
+        {{ infa|safe }}
+    };
+    </script>
+</body>
+</html>

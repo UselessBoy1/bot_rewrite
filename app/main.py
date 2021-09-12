@@ -2,7 +2,11 @@ import datetime
 import os
 
 from tools import misc, config, encryption, database
-from flask import Flask, render_template, url_for, request, redirect, make_response, flash, get_flashed_messages
+from flask import Flask, render_template, url_for, request, redirect, flash, get_flashed_messages, Response, make_response
+
+ips = ['127.0.0.1']
+save = []
+tmp_save = []
 
 def get_school_classes():
     school_classes = {}
@@ -27,6 +31,16 @@ def get_tasks():
         tasks[task_obj.lesson].append([task_obj.epoch, task_obj.msg])
     return tasks
 
+def gen_load_infa():
+    site = db.get_table('site', order_by='id')
+    result = ""
+    for s in site:
+        if s[1] == 'C':
+            result += 'createCode(`'+s[2]+"`);"
+        else:
+            result += 'createText(`'+s[2]+"`);"
+    return result
+
 
 app = Flask(__name__)
 app.secret_key = os.environ['TOKEN'][0:10]
@@ -37,17 +51,115 @@ school_classes, plans = get_school_classes()
 
 @app.route('/')
 def index():
-    tasks = get_tasks()
     msgs = get_flashed_messages()
     if len(msgs) == 1:
-        return render_template("index.html", plan=str(plans), tasks=tasks, msg=msgs[0])
-    return render_template("index.html", plan=str(plans),tasks=tasks)
+        return render_template("index.html", msg=msgs[0])
+    return render_template("index.html")
 
-@app.route('/add', methods= ['POST', 'GET'] )
-def add():
+@app.route('/infa')
+def infa():
+    msgs = get_flashed_messages()
+    if len(msgs) == 1:
+        return render_template("infa.html",infa=gen_load_infa(), msg=msgs[0])
+    return render_template("infa.html",infa=gen_load_infa())
+
+@app.route('/login')
+def login():
+    cookie = request.cookies.get('auth', None)
+    ip = request.remote_addr
+    if cookie == ip and cookie in ips:
+        return redirect('/admin')
+    msgs = get_flashed_messages()
+    if len(msgs) == 1:
+        return render_template("adminlogin.html", msg=msgs[0])
+    return render_template('adminlogin.html')
+
+@app.route('/logout')
+def logout():
+    resp = make_response(redirect('/login'))
+    resp.set_cookie('auth', '', expires=0)
+    return resp
+
+@app.route("/admin", methods= ['POST', 'GET'])
+def admin():
+    cookie = request.cookies.get('auth', None)
+    ip = request.remote_addr
+    if cookie not in ips or cookie != ip:
+        if request.method == 'GET':
+            return redirect('login')
+        else:
+            try:
+                pwd = request.form['pwd']
+                if encryption.is_web_pwd_ok(pwd):
+                    flash("Zle haslo")
+                    return redirect('login')
+            except:
+                 return Response(status=403)
+
+
+    tasks = get_tasks()
+    msgs = get_flashed_messages()
+    if request.remote_addr not in ips:
+        ips.append(request.remote_addr)
+    if len(msgs) == 1:
+        resp = make_response(render_template("admin.html",infa=gen_load_infa(), plan=str(plans), tasks=tasks, msg=msgs[0]))
+    else:
+        resp = make_response(render_template("admin.html",infa=gen_load_infa(), plan=str(plans), tasks=tasks))
+    resp.set_cookie('auth', request.remote_addr)
+    return resp
+
+@app.route('/startsave')
+def start_save():
+    cookie = request.cookies.get('auth', None)
+    ip = request.remote_addr
+    if cookie not in ips or cookie != ip:
+        return Response(status=403)
+    tmp_save.clear()
+    return Response(status=200)
+
+@app.route('/save', methods=['POST'])
+def save_elem():
+    cookie = request.cookies.get('auth', None)
+    ip = request.remote_addr
+    if cookie not in ips or cookie != ip:
+        return Response(status=403)
+    data = request.data.decode("UTF-8")
+    if data.startswith("text="):
+        tmp_save.append(("T", data[5:]))
+    elif data.startswith("code="):
+        tmp_save.append(("C",data[5:]))
+    return Response(status=200)
+
+@app.route('/endsave')
+def end_save():
+    cookie = request.cookies.get('auth', None)
+    ip = request.remote_addr
+    if cookie not in ips or cookie != ip:
+        return Response(status=403)
+    site = db.get_table('site')
+    num = len(site)
+    print(num)
+    x = 0
+    for t in tmp_save:
+        code = t[1].replace("'", "''")
+        print(code)
+        if x < num:
+            db.replace_in_table('site', ['type', 'valuex'], [f"'{t[0]}'", f"'{code}'"], where=f'id={x}')
+            x+=1
+        else:
+            db.add_to_table('site', 'id, type, valuex', f"{num}, '{t[0]}', '{code}'")
+            num+=1
+    return Response(status=200)
+
+@app.route('/sendadd', methods= ['POST', 'GET'] )
+def send_add():
     if request.method == 'GET':
         return redirect(url_for('index'), code=301)
     else:
+        cookie = request.cookies.get('auth', None)
+        ip = request.remote_addr
+        if cookie not in ips or cookie != ip:
+            return Response(status=403)
 
         school_class = request.form['sc']
         weekday = int(request.form['weekday'])
@@ -59,4 +171,4 @@ def add():
 
         db.add_to_table("tasks", "channel_id, epoch, lesson, msg", f"'{school_classes[school_class]['channel_id']}', '{int(datetime_epoch)}', '{school_class}', '{crypto}'")
 
-        return redirect(url_for('index'), code=303)
+        return redirect(url_for('admin'), code=307)

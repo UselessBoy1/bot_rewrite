@@ -4,9 +4,145 @@ body {
     background-color: #444;
     color: #fff;
     font-family: 'Source Code Pro', 'Courier New', Courier, monospace;
+    margin: 0;
 }
 
-.fElements {
+@media (orientation: portrait){
+    body {
+        font-size: 2em;
+    }
+}
+
+.navBar {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-evenly;
+    align-items: center;
+    background-color: #111;
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    top: 0%;
+}
+
+.navBtn {
+    color: #fff;
+    height: 50px;
+    flex: 1;
+    border: none;
+    background-color: transparent;
+    text-decoration: none;
+    vertical-align: middle;
+    line-height: 50px;
+}
+
+.navBtn:hover {
+    transition: 0.3s;
+    background-color: #333;
+}
+.navBtn:active {
+    background-color: #555;
+}
+
+.article {
+    margin-left: 20%;
+    margin-right: 20%;
+    text-align: left;
+    padding: 10px;
+    margin-top: 5em;
+}
+
+.code-div {
+    border-radius: 10px;
+}
+
+@media (orientation: portrait){
+    .article {
+        margin-left: 1%;
+        margin-right: 1%;
+    }
+}
+
+pre {
+    border-radius: 10px;
+}
+
+.admin-div {
+    margin-top: 5em;
+}
+
+.edit-btn {
+    width: 500px;
+    position: absolute;
+    left: 50%;
+    margin-left: -250px;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-evenly;
+    align-items: center;
+}
+
+.chooseBtn { /*.formElement*/
+    flex: 1;
+}
+
+.chooseBtn:hover {
+    transition: 0.3s;
+    background-color: #555;
+}
+
+
+
+.infinite-load {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 50px;
+    height: 50px;
+    margin-left: -25px;
+    margin-top: -25px;
+    border-left: 5px solid red;
+    border-right: 5px solid #22f;
+    border-radius: 50%;
+    animation: inf-load 2s linear infinite;
+}
+
+@keyframes inf-load {
+    0% {
+        transform: rotate(0deg);
+        border-left-color: red;
+        border-right-color: #22f;
+    }
+
+    33% {
+        border-left-color: #0f0;
+        border-right-color: red;
+    }
+
+    50% {
+        transform: rotate(360deg);
+    }
+
+    66% {
+        border-left-color: #22f;
+        border-right-color: #0f0;
+    }
+
+    100% {
+        transform: rotate(720deg);
+        border-left-color: red;
+        border-right-color: blue;
+    }
+}
+
+form{
+    margin-top: 5em;
+}
+
+.chooseBtn,
+.formElements {
     background-color: #222;
     color: #fff;
     border: #222 solid 1px;
@@ -16,6 +152,13 @@ body {
     width: 250px;
     box-sizing: border-box;
     font-family: 'Source Code Pro', 'Courier New', Courier, monospace;
+}
+
+@media (orientation: portrait){
+    .formElements {
+        font-size: 2em;
+        width: 500px;
+    }
 }
 
 input[type='date']::-webkit-calendar-picker-indicator{

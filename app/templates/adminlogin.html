@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Infa</title>
+    <title>Server Bot Configuration Page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">
     <script src="{{ url_for('static', filename='js/tools.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/index.js') }}" defer></script>
 </head>
 <body>
     <div class="navBar">
@@ -14,10 +13,13 @@
         <a href="infa" class="navBtn">INFA</a>
         <a href="login" class="navBtn">LOGIN</a>
     </div>
-    <div class="infinite-load"></div>
+    <form action="admin" method="POST" style="margin-top: 5em">
+        <input type="password" name="pwd" class="formElements"><br>
+        <input type="submit" class="formElements">
+    </form>
     <div id="toast"></div>
     {% if msg %}
-    <script>toast('{{ msg }}')</script>
+    <script>toast('{{ msg}} ');</script>
     {% endif %}
 </body>
 </html>

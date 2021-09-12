@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <title>Infa</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/prism.css') }}">
     <link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">
     <script src="{{ url_for('static', filename='js/tools.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/index.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/infa.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/prism.js') }}" defer></script>
 </head>
 <body>
     <div class="navBar">
@@ -14,10 +16,16 @@
         <a href="infa" class="navBtn">INFA</a>
         <a href="login" class="navBtn">LOGIN</a>
     </div>
-    <div class="infinite-load"></div>
+    <div class="article">
+    </div>
     <div id="toast"></div>
-    {% if msg %}
-    <script>toast('{{ msg }}')</script>
-    {% endif %}
+    <script>
+        {% if msg %}
+        toast('{{ msg }}')
+        {% endif %}
+        function generateInfa(){
+            {{ infa|safe }}
+        };
+    </script>
 </body>
 </html>
