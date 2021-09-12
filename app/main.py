@@ -149,6 +149,8 @@ def end_save():
         else:
             db.add_to_table('site', 'id, type, valuex', f"{num}, '{t[0]}', '{code}'")
             num+=1
+    if x <= num:
+        db.delete_from_table('site', f'id >= {x}')
     return Response(status=200)
 
 @app.route('/sendadd', methods= ['POST', 'GET'] )
