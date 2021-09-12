@@ -47,7 +47,7 @@ function sendElement(child)
         console.log(`if for ${child}`);
         if(child.childNodes[1].tagName.toLowerCase() == 'div')
         {
-            xhr.send('code='.concat(child.childNodes[1].childNodes[0].childNodes[0].innerText));
+            xhr.send('code='.concat(child.childNodes[1].childNodes[0].childNodes[0].innerText.replaceAll('\\', '\\\\')));
         }
         else 
         {
