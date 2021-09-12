@@ -98,18 +98,7 @@ function onKeyDown(e) {
     }
 }
 
-function editText() {
-    if(this.innerHTML === "%del")
-    {
-        this.remove();
-    }
-}
-
 function editCode() {
-    if(this.innerHTML.includes('%del'))
-    {
-        this.parentElement.parentElement.remove();
-    }
     var blocks = document.querySelectorAll('code');
     blocks.forEach(block => {
         removeLeadingWhitespaces(block);
@@ -117,33 +106,101 @@ function editCode() {
     generatePrism();
 }
 
+function createParentDiv()
+{
+    let parent_div = document.createElement('div');
+    let moving_div = document.createElement('div');
+    
+    moving_div.className = 'moving-div';
+    
+    let buttonUp = document.createElement('button');
+    buttonUp.innerText = 'UP';
+    buttonUp.className = 'chooseBtn';
+    buttonUp.addEventListener('click', () => {
+        moveElementUp(parent_div);
+    });
+
+    let buttonDel = document.createElement('button');
+    buttonDel.innerText = 'DELETE';
+    buttonDel.className = 'chooseBtn';
+    buttonDel.addEventListener('click', () => {
+        parent_div.remove();
+    });
+
+    let buttonDown = document.createElement('button');
+    buttonDown.innerText = 'DOWN';
+    buttonDown.className = 'chooseBtn';
+    buttonDown.addEventListener('click', () => {
+        moveElementDown(parent_div);
+    });
+    
+    moving_div.appendChild(buttonUp);
+    moving_div.appendChild(buttonDel);
+    moving_div.appendChild(buttonDown);
+
+    parent_div.className = 'section-div';
+    parent_div.appendChild(moving_div);
+
+    return parent_div;
+}
+
 function createCode(code) {
+    let parent_div = createParentDiv();
+
     let div_elem = document.createElement('div');
     div_elem.className = 'code-div';
+    
     let pre_elem = document.createElement('pre');
     let code_elem = document.createElement('code');
+    
     code_elem.className = 'language-cpp';
     code_elem.contentEditable = true
     code_elem.addEventListener('focusout', editCode);
     code_elem.addEventListener('keydown', onKeyDown);
     code_elem.innerHTML = code.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+    
     pre_elem.appendChild(code_elem);
+    
     div_elem.appendChild(pre_elem);
-    article.appendChild(div_elem);
+    
+    parent_div.appendChild(div_elem);
+    
+    article.appendChild(parent_div);
+    
     removeLeadingWhitespaces(code_elem);
     generatePrism();
 }
 
 function createText(txt) {
+    let parent_div = createParentDiv();
+
     let paragraph_elem = document.createElement('p');
     paragraph_elem.style.padding = "5px";
     paragraph_elem.style.border = "2px solid #333";
     paragraph_elem.style.borderRadius = '10px';
     paragraph_elem.innerHTML = txt;
     paragraph_elem.contentEditable = true;
-    paragraph_elem.addEventListener('input', editText);
     paragraph_elem.addEventListener('keydown', onKeyDown);
-    article.appendChild(paragraph_elem);
+    
+    parent_div.appendChild(paragraph_elem);
+    
+    article.appendChild(parent_div);
+}
+
+function moveElementUp(element)
+{
+    let parent = element.parentNode;
+    let prev = element.previousSibling;
+    let oldElem = parent.removeChild(element);
+    parent.insertBefore(oldElem, prev);
+}
+
+function moveElementDown(element)
+{
+    let parent = element.parentNode;
+    let next = element.nextSibling.nextSibling;
+    let oldElem = parent.removeChild(element);
+    parent.insertBefore(oldElem, next);
 }
 
 window.addEventListener('load', () => {

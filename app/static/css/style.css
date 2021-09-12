@@ -93,7 +93,21 @@ pre {
     background-color: #555;
 }
 
+.section-div
+{
+    background-color: #4f4f4f;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 15px;
+}
 
+.moving-div
+{
+    display: flex;
+    flex-direction: row;
+    justify-content:space-evenly;
+    align-items: center;
+}
 
 .infinite-load {
     position: fixed;
