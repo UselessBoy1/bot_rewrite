@@ -142,9 +142,11 @@ def end_save():
     for t in tmp_save:
         code = t[1].replace("'", "''")
         if x < num:
+            print(t, 'R')
             db.replace_in_table('site', ['type', 'valuex'], [f"'{t[0]}'", f"'{code}'"], where=f'id={x}')
             x+=1
         else:
+            print(t, 'A')
             db.add_to_table('site', 'id, type, valuex', f"{num}, '{t[0]}', '{code}'")
             num+=1
     if x < len(site):
