@@ -18,10 +18,11 @@ document.querySelector('#save').addEventListener('click', () => {
             if(child.tagName !== undefined)
             {
                 xhr = new XMLHttpRequest();
-                if(child.tagName.toLowerCase() == 'div')
+                if(child.childNodes[1].tagName.toLowerCase() == 'div')
                 {
                     xhr.open('POST', '/save');
                     xhr.onload = () => {
+                        console.log(`saved ${child.childNodes[1].tagName}`)
                         ready = true;
                     };
                     xhr.send('code='.concat(child.childNodes[1].childNodes[0].childNodes[0].innerText));
@@ -31,6 +32,7 @@ document.querySelector('#save').addEventListener('click', () => {
                 {
                     xhr.open('POST', '/save');
                     xhr.onload = () => {
+                        console.log(`saved ${child.childNodes[1].tagName}`)
                         ready = true;
                     };
                     xhr.send('text='.concat(child.childNodes[1].innerText));
