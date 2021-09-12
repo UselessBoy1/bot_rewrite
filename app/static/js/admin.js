@@ -9,47 +9,56 @@ document.querySelector('#addTxt').addEventListener('click', () => {
 });
 
 document.querySelector('#save').addEventListener('click', () => {
-    let children = article.childNodes;
-    var xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
     xhr.open('GET', '/startsave');
     xhr.onload = () => {
-        var ready = true;
-        for(let child of children){
-            if(child.tagName !== undefined)
-            {
-                xhr = new XMLHttpRequest();
-                if(child.childNodes[1].tagName.toLowerCase() == 'div')
-                {
-                    xhr.open('POST', '/save');
-                    xhr.onload = () => {
-                        console.log(`saved ${child.childNodes[1].tagName}`)
-                        ready = true;
-                    };
-                    xhr.send('code='.concat(child.childNodes[1].childNodes[0].childNodes[0].innerText));
-                    ready = false;
-                }
-                else 
-                {
-                    xhr.open('POST', '/save');
-                    xhr.onload = () => {
-                        console.log(`saved ${child.childNodes[1].tagName}`)
-                        ready = true;
-                    };
-                    xhr.send('text='.concat(child.childNodes[1].innerText));
-                    ready = false;
-                }
-            }
-        }
-        xhr = new XMLHttpRequest();
-        xhr.open('GET', '/endsave');
-        xhr.onload = () => {
-            toast('saved!');
-        }
-        xhr.send(null);
+        sendElement(article.childNodes[1]);
     }
     xhr.send(null);
-    
 });
+
+function sendEndSave()
+{
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', '/endsave');
+    xhr.onload = () => {
+        toast('saved!');
+    }
+    xhr.send(null);
+}
+
+function sendElement(child)
+{
+    console.log('send call!');
+    if(child == undefined)
+    {
+        console.log('end save');
+        sendEndSave();
+        return;
+    }
+    if(child.tagName !== undefined)
+    {
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/save');
+        console.log(`open for ${child}`);
+        xhr.onload = () => {
+            sendElement(child.nextSibling);
+        };
+        console.log(`if for ${child}`);
+        if(child.childNodes[1].tagName.toLowerCase() == 'div')
+        {
+            xhr.send('code='.concat(child.childNodes[1].childNodes[0].childNodes[0].innerText));
+        }
+        else 
+        {
+            xhr.send('text='.concat(child.childNodes[1].innerText));
+        }
+    }
+    else 
+    {
+        console.log(`${child.tagName}`);
+    }
+}
 
 function removeLeadingWhitespaces(block) {
     // remove leading and trailing white space.
