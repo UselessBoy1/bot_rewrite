@@ -1,10 +1,11 @@
 import datetime
 import os
 
+from random import choice
 from tools import misc, config, encryption, database
 from flask import Flask, render_template, url_for, request, redirect, flash, get_flashed_messages, Response, make_response
 
-ips = ['127.0.0.1']
+tokens = ['127.0.0.1']
 save = []
 tmp_save = []
 
@@ -21,6 +22,15 @@ def get_school_classes():
         school_classes[name] = data
         plans[name] = data['plan']
     return school_classes, plans
+
+def gen_token():
+    alph = 'qwertyuiopasdfghjklzxcvbnm'
+    alph = alph + alph.upper()
+    res = ""
+    for i in range(50):
+        res += choice(alph)
+    return res
+
 
 def get_tasks():
     tasks = {}
@@ -65,9 +75,8 @@ def infa():
 
 @app.route('/login')
 def login():
-    cookie = request.cookies.get('auth', None)
-    ip = request.remote_addr
-    if cookie == ip and cookie in ips:
+    token = request.cookies.get('auth', None)
+    if token in tokens:
         return redirect('/admin')
     msgs = get_flashed_messages()
     if len(msgs) == 1:
@@ -82,9 +91,8 @@ def logout():
 
 @app.route("/admin", methods= ['POST', 'GET'])
 def admin():
-    cookie = request.cookies.get('auth', None)
-    ip = request.remote_addr
-    if cookie not in ips or cookie != ip:
+    token = request.cookies.get('auth', None)
+    if token not in tokens:
         if request.method == 'GET':
             return redirect('login')
         else:
@@ -99,29 +107,28 @@ def admin():
 
     tasks = get_tasks()
     msgs = get_flashed_messages()
-    if request.remote_addr not in ips:
-        ips.append(request.remote_addr)
+    new_token = gen_token()
+    if token not in tokens:
+        tokens.append(new_token)
     if len(msgs) == 1:
         resp = make_response(render_template("admin.html",infa=gen_load_infa(), plan=str(plans), tasks=tasks, msg=msgs[0]))
     else:
         resp = make_response(render_template("admin.html",infa=gen_load_infa(), plan=str(plans), tasks=tasks))
-    resp.set_cookie('auth', request.remote_addr)
+    resp.set_cookie('auth', new_token)
     return resp
 
 @app.route('/startsave')
 def start_save():
-    cookie = request.cookies.get('auth', None)
-    ip = request.remote_addr
-    if cookie not in ips or cookie != ip:
+    token = request.cookies.get('auth', None)
+    if token not in tokens:
         return Response(status=403)
     tmp_save.clear()
     return Response(status=200)
 
 @app.route('/save', methods=['POST'])
 def save_elem():
-    cookie = request.cookies.get('auth', None)
-    ip = request.remote_addr
-    if cookie not in ips or cookie != ip:
+    token = request.cookies.get('auth', None)
+    if token not in tokens:
         return Response(status=403)
     data = request.data.decode("UTF-8")
     if data.startswith("text="):
@@ -132,9 +139,8 @@ def save_elem():
 
 @app.route('/endsave')
 def end_save():
-    cookie = request.cookies.get('auth', None)
-    ip = request.remote_addr
-    if cookie not in ips or cookie != ip:
+    token = request.cookies.get('auth', None)
+    if token not in tokens:
         return Response(status=403)
     site = db.get_table('site')
     num = len(site)
@@ -142,11 +148,9 @@ def end_save():
     for t in tmp_save:
         code = t[1].replace("'", "''")
         if x < num:
-            print(t, 'R')
             db.replace_in_table('site', ['type', 'valuex'], [f"'{t[0]}'", f"'{code}'"], where=f'id={x}')
             x+=1
         else:
-            print(t, 'A')
             db.add_to_table('site', 'id, type, valuex', f"{num}, '{t[0]}', '{code}'")
             num+=1
     if x < len(site):
@@ -158,9 +162,8 @@ def send_add():
     if request.method == 'GET':
         return redirect(url_for('index'), code=301)
     else:
-        cookie = request.cookies.get('auth', None)
-        ip = request.remote_addr
-        if cookie not in ips or cookie != ip:
+        token = request.cookies.get('auth', None)
+        if token not in tokens:
             return Response(status=403)
 
         school_class = request.form['sc']
