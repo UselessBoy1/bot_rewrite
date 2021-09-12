@@ -13,6 +13,7 @@ document.querySelector('#save').addEventListener('click', () => {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '/startsave');
     xhr.onload = () => {
+        var ready = true;
         for(let child of children){
             if(child.tagName !== undefined)
             {
@@ -20,12 +21,20 @@ document.querySelector('#save').addEventListener('click', () => {
                 if(child.tagName.toLowerCase() == 'div')
                 {
                     xhr.open('POST', '/save');
+                    xhr.onload = () => {
+                        ready = true;
+                    };
                     xhr.send('code='.concat(child.childNodes[0].childNodes[0].innerText));
+                    ready = false;
                 }
                 else 
                 {
                     xhr.open('POST', '/save');
+                    xhr.onload = () => {
+                        ready = true;
+                    };
                     xhr.send('text='.concat(child.innerText));
+                    ready = false;
                 }
             }
         }
