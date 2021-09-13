@@ -45,7 +45,7 @@ function createCode(code) {
 
 function createText(txt) {
     let paragraph_elem = document.createElement('p');
-    paragraph_elem.innerHTML = txt;
+    paragraph_elem.innerHTML = urlify(txt);
     article.appendChild(paragraph_elem);
 }
 

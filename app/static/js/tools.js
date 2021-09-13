@@ -1,4 +1,16 @@
-const toast = (msg) => {
+function urlify(text)
+{
+    console.log(text);
+    let urlRegex = /(https?:\/\/[\S]+)/
+    let t =  text.replace(urlRegex, (url) => 
+    {
+        return `<a href=${url}>${url}</a>`;
+    });
+    console.log(t);
+    return t;
+}
+
+function toast(msg) {
     let toastDiv = document.querySelector('#toast');
     toastDiv.innerText = msg
     toastDiv.style.marginLeft = -toastDiv.clientWidth/2 + "px"
@@ -8,6 +20,8 @@ const toast = (msg) => {
     }, 3000);
 }
 
+// http://localhostz
+
 words = {
     "tydzien": {
         "x": "tydzien",
@@ -16,7 +30,7 @@ words = {
     }
 }
 
-const getPLEnd = (word, num) => {
+function getPLEnd(word, num) {
     let last_digit = [...(num.toString())].pop();
     if(num == 1){
         last_digit = 'x';
