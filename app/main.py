@@ -109,11 +109,12 @@ def admin():
     new_token = gen_token()
     if token not in tokens:
         tokens.append(new_token)
+        token = new_token
     if len(msgs) == 1:
         resp = make_response(render_template("admin.html",infa=gen_load_infa(), plan=str(plans), tasks=tasks, msg=msgs[0]))
     else:
         resp = make_response(render_template("admin.html",infa=gen_load_infa(), plan=str(plans), tasks=tasks))
-    resp.set_cookie('auth', new_token)
+    resp.set_cookie('auth', token)
     return resp
 
 @app.route('/startsave')
