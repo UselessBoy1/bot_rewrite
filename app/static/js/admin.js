@@ -1,13 +1,5 @@
 var article = document.querySelector('.article');
 
-document.querySelector('#addCode').addEventListener('click', () => {
-    createCode('#include <iostream>\nint main(){\n   // code here :)\n}');
-});
-
-document.querySelector('#addTxt').addEventListener('click', () => {
-    createText("text here..");
-});
-
 document.querySelector('#save').addEventListener('click', () => {
     let xhr = new XMLHttpRequest();
     xhr.open('GET', '/startsave');
@@ -155,6 +147,59 @@ function createParentDiv()
     return parent_div;
 }
 
+function addEditBtns(parent_div){
+    let edit_div = document.createElement('div');
+    edit_div.className = 'moving-div';
+
+    let buttonTxt = document.createElement('button');
+    buttonTxt.innerText = 'Tt';
+    buttonTxt.className = 'chooseBtn';
+    buttonTxt.addEventListener('click', () => {
+        createTextAfter('text here...', parent_div);
+    });
+
+    let buttonCode = document.createElement('button');
+    buttonCode.innerText = '</>';
+    buttonCode.className = 'chooseBtn';
+    buttonCode.addEventListener('click', () => {
+        createCodeAfter('int main(){\n   // code here :)\n}', parent_div);
+    });
+
+    edit_div.appendChild(buttonTxt);
+    edit_div.appendChild(buttonCode);
+
+    parent_div.appendChild(edit_div);
+}
+
+function createCodeAfter(code, element) {
+    let parent_div = createParentDiv();
+
+    let div_elem = document.createElement('div');
+    div_elem.className = 'code-div';
+    
+    let pre_elem = document.createElement('pre');
+    let code_elem = document.createElement('code');
+    
+    code_elem.className = 'language-cpp';
+    code_elem.contentEditable = true
+    code_elem.addEventListener('focusout', editCode);
+    code_elem.addEventListener('keydown', onKeyDown);
+    code_elem.innerHTML = code.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+    
+    pre_elem.appendChild(code_elem);
+    
+    div_elem.appendChild(pre_elem);
+    
+    parent_div.appendChild(div_elem);
+    
+    addEditBtns(parent_div);
+
+    article.insertBefore(parent_div, element.nextSibling);
+    
+    removeLeadingWhitespaces(code_elem);
+    generatePrism();
+}
+
 function createCode(code) {
     let parent_div = createParentDiv();
 
@@ -178,8 +223,28 @@ function createCode(code) {
     
     article.appendChild(parent_div);
     
+    addEditBtns(parent_div);
+
     removeLeadingWhitespaces(code_elem);
     generatePrism();
+}
+
+function createTextAfter(txt, element){
+    let parent_div = createParentDiv();
+
+    let paragraph_elem = document.createElement('p');
+    paragraph_elem.style.padding = "5px";
+    paragraph_elem.style.border = "2px solid #333";
+    paragraph_elem.style.borderRadius = '10px';
+    paragraph_elem.innerHTML = txt;
+    paragraph_elem.contentEditable = true;
+    paragraph_elem.addEventListener('keydown', onKeyDown);
+    
+    parent_div.appendChild(paragraph_elem);
+    
+    addEditBtns(parent_div);
+
+    article.insertBefore(parent_div, element.nextSibling);
 }
 
 function createText(txt) {
@@ -195,6 +260,8 @@ function createText(txt) {
     
     parent_div.appendChild(paragraph_elem);
     
+    addEditBtns(parent_div);
+
     article.appendChild(parent_div);
 }
 

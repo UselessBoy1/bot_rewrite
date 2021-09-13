@@ -1,12 +1,10 @@
 function urlify(text)
 {
-    console.log(text);
     let urlRegex = /(https?:\/\/[\S]+)/
     let t =  text.replace(urlRegex, (url) => 
     {
         return `<a href=${url}>${url}</a>`;
     });
-    console.log(t);
     return t;
 }
 
@@ -19,8 +17,6 @@ function toast(msg) {
         toastDiv.className = '';
     }, 3000);
 }
-
-// http://localhostz
 
 words = {
     "tydzien": {

@@ -5,8 +5,7 @@ from random import choice
 from tools import misc, config, encryption, database
 from flask import Flask, render_template, url_for, request, redirect, flash, get_flashed_messages, Response, make_response
 
-tokens = ['127.0.0.1']
-save = []
+tokens = []
 tmp_save = []
 
 def get_school_classes():
@@ -121,6 +120,7 @@ def admin():
 def start_save():
     token = request.cookies.get('auth', None)
     if token not in tokens:
+        print(tokens, token)
         return Response(status=403)
     tmp_save.clear()
     return Response(status=200)
