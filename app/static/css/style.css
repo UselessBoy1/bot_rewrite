@@ -15,6 +15,7 @@ body {
 
 a {
     text-decoration: underline;
+    overflow-wrap: anywhere;
     color: #0c0;
 }
 
