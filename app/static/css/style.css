@@ -15,7 +15,6 @@ body {
 
 a {
     text-decoration: underline;
-    overflow-wrap: anywhere;
     color: #0c0;
 }
 
@@ -58,6 +57,7 @@ a {
     text-align: left;
     padding: 10px;
     margin-top: 5em;
+    overflow-wrap: anywhere;
 }
 
 .code-div {
