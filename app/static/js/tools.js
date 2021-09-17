@@ -3,7 +3,12 @@ function urlify(text)
     let urlRegex = /(https?:\/\/[\S]+)/
     let t =  text.replace(urlRegex, (url) => 
     {
-        return `<a href=${url}>${url}</a>`;
+        let name = url;
+        if(navigator.userAgent.toLowerCase().match(/mobile/i))
+        {
+            name='link' 
+        }
+        return `<a href=${url}>${name}</a>`;
     });
     return t;
 }

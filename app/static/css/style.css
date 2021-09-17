@@ -7,11 +7,11 @@ body {
     margin: 0;
 }
 
-@media (orientation: portrait){
+/* @media (orientation: portrait){
     body {
         font-size: 2em;
     }
-}
+} */
 
 a {
     text-decoration: underline;
@@ -57,7 +57,13 @@ a {
     text-align: left;
     padding: 10px;
     margin-top: 5em;
+    white-space: pre-wrap;  
+    white-space: -moz-pre-wrap; 
+    white-space: -pre-wrap;     
+    white-space: -o-pre-wrap;    
     overflow-wrap: anywhere;
+    hyphens: auto;
+    
 }
 
 .code-div {
