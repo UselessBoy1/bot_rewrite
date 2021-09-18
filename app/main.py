@@ -154,6 +154,7 @@ def end_save():
         else:
             db.add_to_table('site', 'id, type, valuex', f"{num}, '{t[0]}', '{code}'")
             num+=1
+            x+=1
     if x < len(site):
         db.delete_from_table('site', f'id >= {x}')
     return Response(status=200)

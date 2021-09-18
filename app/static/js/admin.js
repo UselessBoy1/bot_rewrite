@@ -1,12 +1,19 @@
 var article = document.querySelector('.article');
+var is_saving = false;
+var save_btn  = document.querySelector('#save');
 
-document.querySelector('#save').addEventListener('click', () => {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', '/startsave');
-    xhr.onload = () => {
-        sendElement(article.childNodes[1]);
+save_btn.addEventListener('click', () => {
+    if(!is_saving){
+        is_saving = true;
+        save_btn.className = 'chooseBtn savingInProgressBtn';
+        save_btn.innerText = 'saving... please wait...';
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', '/startsave');
+        xhr.onload = () => {
+            sendElement(article.childNodes[1]);
+        }
+        xhr.send(null);
     }
-    xhr.send(null);
 });
 
 function sendEndSave()
@@ -15,6 +22,10 @@ function sendEndSave()
     xhr.open('GET', '/endsave');
     xhr.onload = () => {
         toast('saved!');
+        console.log('end save');
+        document.querySelector('#save').className = 'chooseBtn';
+        save_btn.innerText = 'save';
+        is_saving = false;
     }
     xhr.send(null);
 }
@@ -24,7 +35,6 @@ function sendElement(child)
     console.log('send call!');
     if(child == undefined)
     {
-        console.log('end save');
         sendEndSave();
         return;
     }
