@@ -1,4 +1,5 @@
 var article = document.querySelector('.article');
+var menuBar = document.querySelector('.menuBar');
 
 function removeLeadingWhitespaces(block) {
     // remove leading and trailing white space.
@@ -49,6 +50,20 @@ function createText(txt) {
     article.appendChild(paragraph_elem);
 }
 
+function createHeader(txt) {
+    let link = document.createElement('a');
+    link.href = `#${txt.replaceAll(' ', '')}`;
+    link.innerHTML = txt;
+    link.className = 'menuBarBtn';
+    menuBar.appendChild(link);
+    menuBar.appendChild(document.createElement('br'));
+    menuBar.appendChild(document.createElement('br'));
+
+    let header_elem = document.createElement('h1');
+    header_elem.innerHTML = urlify(txt);
+    header_elem.id = `${txt.replaceAll(' ', '')}`;
+    article.appendChild(header_elem);
+}
 
 onload = () => {
     generateInfa();

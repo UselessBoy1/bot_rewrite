@@ -46,8 +46,10 @@ def gen_load_infa():
     for s in site:
         if s[1] == 'C':
             result += 'createCode(`'+s[2]+"`);"
-        else:
+        elif s[1] == 'T':
             result += 'createText(`'+s[2]+"`);"
+        else:
+            result += 'createHeader(`' + s[2] + "`);"
     return result
 
 
@@ -136,6 +138,8 @@ def save_elem():
         tmp_save.append(("T", data[5:]))
     elif data.startswith("code="):
         tmp_save.append(("C",data[5:]))
+    elif data.startswith("header="):
+        tmp_save.append(("H",data[7:]))
     return Response(status=200)
 
 @app.route('/endsave')

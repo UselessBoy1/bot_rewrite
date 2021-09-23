@@ -166,6 +166,28 @@ form{
     background-color: #555;
 }
 
+.menuBar {
+    position: fixed;
+    left: 1%;
+    top: 10%;
+    width: 15%;
+    background-color: #222;
+    border-radius: 10px;
+}
+
+@media (orientation: portrait){
+    .menuBar {
+        display: none;
+    }
+}
+
+.menuBarBtn {
+    color: #eee;
+    text-decoration: none;
+    padding: 20px;
+    font-size: 1.2em;
+}
+
 .chooseBtn,
 .formElements {
     background-color: #222;

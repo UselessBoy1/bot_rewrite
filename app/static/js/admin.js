@@ -51,9 +51,13 @@ function sendElement(child)
         {
             xhr.send('code='.concat(child.childNodes[1].childNodes[0].childNodes[0].innerText.replaceAll('\\', '\\\\')));
         }
-        else 
+        else if(child.childNodes[1].tagName.toLowerCase() == 'p')
         {
             xhr.send('text='.concat(child.childNodes[1].innerText));
+        }
+        else 
+        {
+            xhr.send('header='.concat(child.childNodes[1].innerText));
         }
     }
     else 
@@ -168,6 +172,13 @@ function addEditBtns(parent_div){
         createTextAfter('text here...', parent_div);
     });
 
+    let buttonHeader = document.createElement('button');
+    buttonHeader.innerText = 'H1';
+    buttonHeader.className = 'chooseBtn';
+    buttonHeader.addEventListener('click', () => {
+        createHeaderAfter('header here', parent_div);
+    });
+
     let buttonCode = document.createElement('button');
     buttonCode.innerText = '</>';
     buttonCode.className = 'chooseBtn';
@@ -176,6 +187,7 @@ function addEditBtns(parent_div){
     });
 
     edit_div.appendChild(buttonTxt);
+    edit_div.appendChild(buttonHeader);
     edit_div.appendChild(buttonCode);
 
     parent_div.appendChild(edit_div);
@@ -269,6 +281,42 @@ function createText(txt) {
     paragraph_elem.addEventListener('keydown', onKeyDown);
     
     parent_div.appendChild(paragraph_elem);
+    
+    addEditBtns(parent_div);
+
+    article.appendChild(parent_div);
+}
+
+function createHeaderAfter(txt, element){
+    let parent_div = createParentDiv();
+
+    let header_elem = document.createElement('h1');
+    header_elem.style.padding = "5px";
+    header_elem.style.border = "2px solid #333";
+    header_elem.style.borderRadius = '10px';
+    header_elem.innerHTML = txt;
+    header_elem.contentEditable = true;
+    header_elem.addEventListener('keydown', onKeyDown);
+    
+    parent_div.appendChild(header_elem);
+    
+    addEditBtns(parent_div);
+
+    article.insertBefore(parent_div, element.nextSibling);
+}
+
+function createHeader(txt) {
+    let parent_div = createParentDiv();
+
+    let header_elem = document.createElement('h1');
+    header_elem.style.padding = "5px";
+    header_elem.style.border = "2px solid #333";
+    header_elem.style.borderRadius = '10px';
+    header_elem.innerHTML = txt;
+    header_elem.contentEditable = true;
+    header_elem.addEventListener('keydown', onKeyDown);
+    
+    parent_div.appendChild(header_elem);
     
     addEditBtns(parent_div);
 
