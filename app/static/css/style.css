@@ -47,7 +47,7 @@ a {
 
 .article {
     margin-left: 20%;
-    margin-right: 20%;
+    margin-right: 10%;
     text-align: left;
     padding: 10px;
     margin-top: 5em;
@@ -168,11 +168,12 @@ form{
 
 .menuBar {
     position: fixed;
-    left: 1%;
+    left: 0%;
     top: 10%;
     width: 15%;
-    background-color: #222;
-    border-radius: 10px;
+    background-color: #111;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 @media (orientation: portrait){

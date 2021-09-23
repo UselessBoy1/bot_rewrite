@@ -1,4 +1,5 @@
 var article = document.querySelector('.article');
+var menuBar = document.querySelector('.menuBar');
 var is_saving = false;
 var save_btn  = document.querySelector('#save');
 
@@ -306,6 +307,14 @@ function createHeaderAfter(txt, element){
 }
 
 function createHeader(txt) {
+    let link = document.createElement('a');
+    link.href = `#${txt.replaceAll(' ', '')}`;
+    link.innerHTML = txt;
+    link.className = 'menuBarBtn';
+    menuBar.appendChild(link);
+    menuBar.appendChild(document.createElement('br'));
+    menuBar.appendChild(document.createElement('br'));
+
     let parent_div = createParentDiv();
 
     let header_elem = document.createElement('h1');
@@ -314,6 +323,7 @@ function createHeader(txt) {
     header_elem.style.borderRadius = '10px';
     header_elem.innerHTML = txt;
     header_elem.contentEditable = true;
+    header_elem.id = `${txt.replaceAll(' ', '')}`;
     header_elem.addEventListener('keydown', onKeyDown);
     
     parent_div.appendChild(header_elem);

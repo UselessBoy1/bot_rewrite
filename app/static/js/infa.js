@@ -62,6 +62,7 @@ function createHeader(txt) {
     let header_elem = document.createElement('h1');
     header_elem.innerHTML = urlify(txt);
     header_elem.id = `${txt.replaceAll(' ', '')}`;
+    article.appendChild(document.createElement('hr'));
     article.appendChild(header_elem);
 }
 
