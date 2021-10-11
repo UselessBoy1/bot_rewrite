@@ -128,7 +128,7 @@ class CommandBot(commands.Cog):
 
     @commands.command(name="admin")
     async def give_admin(self, ctx, *args):
-        if not permissions.check_permission(ctx.message.author, 'ADMIN'):
+        if not permissions.check_permission(ctx, 'ADMIN'):
             await ctx.send(embeds.permission_denied)
             return
         if len(ctx.message.mentions) == 1:
@@ -137,7 +137,6 @@ class CommandBot(commands.Cog):
             if not permissions.has_role(role_id, mentioned):
                 role = ctx.guild.get_role(role_id)
                 await mentioned.add_rote(role)
-
         else:
             await ctx.send(embeds.err("CONFIG_COLOR", "No member mentioned!"))
 
