@@ -136,7 +136,7 @@ class CommandBot(commands.Cog):
             role_id = permissions.permissions_roles["PRZEWODNICZACY"]
             if not permissions.has_role(role_id, mentioned):
                 role = ctx.guild.get_role(role_id)
-                await mentioned.add_role(role)
+                await mentioned.add_roles(role)
         else:
             await ctx.send(embeds.err("CONFIG_COLOR", "No member mentioned!"))
 
