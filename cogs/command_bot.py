@@ -150,6 +150,7 @@ class CommandBot(commands.Cog):
 
     @commands.command(name="bruh")
     async def bruh_cmd(self, ctx):
+        await ctx.message.delete()
         await ctx.send(
             "BRUH",
             components=[
