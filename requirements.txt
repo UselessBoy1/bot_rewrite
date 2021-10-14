@@ -1,7 +1,9 @@
 discord.py
+discord_components
 psycopg2
 pytz
 requests
 langid
 cryptography
 flask
+easyimap

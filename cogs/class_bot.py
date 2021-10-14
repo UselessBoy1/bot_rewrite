@@ -1,11 +1,14 @@
+import io
+
 import discord
 import asyncio
 import datetime
 import traceback
 import sys
 import math
+import easyimap
 
-from tools import misc, lang, config, embeds, help
+from tools import misc, lang, config, embeds, help, encryption, embeds
 from discord.ext import commands, tasks
 
 LESSON_TIMES = config.LESSON_TIMES
@@ -23,6 +26,31 @@ class Reminder:
     def __lt__(self, other):
         return self.r_time < other.r_time
 
+class EmailChecker:
+
+    def __init__(self, host, email, password, ssl, port, allow_addr):
+        self.allow_addr = allow_addr
+        self.immaper = easyimap.connect(host, email, password, 'INBOX', ssl=ssl, port=port)
+
+    async def check(self, send_channel :discord.TextChannel):
+        try:
+            unseen_emails = self.immaper.unseen(limit=10)
+            for mail in unseen_emails:
+                to_addr = mail.to
+                if self.allow_addr in to_addr:
+                    embed = discord.Embed(
+                        title=f'{mail.title} - {mail.from_addr}',
+                        description=f'{mail.body.encode("UTF-8").decode("UTF-8")}',
+                        color=config.v['EMAIL_COLOR']
+                    )
+                    await send_channel.send(embed=embed)
+                    for attachment in mail.attachments:
+                        f = discord.File(fp=io.BytesIO(attachment[1]))
+                        f.filename = attachment[0].encode('UTF-8').decode('UTF-8')
+                        await send_channel.send(file=f)
+
+        except Exception as e:
+            traceback.print_exception(type(e), e, e.__traceback__, file=sys.stderr)
 
 class SchoolClass:
 
@@ -31,13 +59,11 @@ class SchoolClass:
     reminders = []
     plan = []
     links = {}
-    email = ""
-    host = ""
-    password = ""
     channel_id = 0
     channel = None
     pending_reminder = None
     edit_message = None
+    email_checker = None
     #endregion
 
     def __init__(self, bot :commands.Bot):
@@ -47,6 +73,8 @@ class SchoolClass:
 
     def run(self):
         self.channel = self.bot.get_channel(int(self.channel_id))
+        if self.email_checker is not None:
+            self.check_email.start()
         self.remind.start()
         self.rerun()
 
@@ -193,7 +221,7 @@ class SchoolClass:
 
     #endregion
 
-    async def check_everything(self):
+    async def set_new_day(self):
         #check edit message
         if self.edit_message is not None:
             embed = self.get_link()
@@ -234,6 +262,10 @@ class SchoolClass:
             # if no reminders left wait 30s
             self.pending_reminder = None
             await asyncio.sleep(30)
+
+    @tasks.loop(minutes=3)
+    async def check_email(self):
+        await self.email_checker.check(self.channel)
 
     #endregion
 
@@ -321,14 +353,16 @@ class LessonBot(commands.Cog):
     async def set_current_date(self):
         now = misc.get_now()
         date = f"📅Data: {str(now.day).zfill(2)}.{str(now.month).zfill(2)}.{now.year}"  # change channel name to current date
-        await self.bot.get_channel(config.v['DATE_CHANNEL']).edit(name=date)
+        channel = self.bot.get_channel(config.v['DATE_CHANNEL'])
+        if channel is not None:
+            await channel.edit(name=date)
 
     #endregion
 
     #region TASKS
 
     @tasks.loop(hours=24)
-    async def check_everything(self):
+    async def refresh_next_day(self):
         # wait to whole minute
         now = misc.get_now()
         now_ = datetime.datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute, second=1)
@@ -338,7 +372,7 @@ class LessonBot(commands.Cog):
         while True:
             # call check_everything() function
             for sc in self.school_classes:
-                await sc.check_everything()
+                await sc.set_new_day()
 
             await asyncio.sleep(60)
 
@@ -358,7 +392,7 @@ class LessonBot(commands.Cog):
     #region EVENTS
     @commands.Cog.listener("on_ready")
     async def on_ready(self):
-        self.check_everything.start()
+        self.refresh_next_day.start()
         for sc in self.school_classes:
             sc.run()
 
@@ -438,6 +472,14 @@ def load_school_classes(bot):
         sc.plan = data['plan']
         sc.links = data['links']
         sc.channel_id = data['channel_id']
+        if 'email' in data.keys():
+            host = encryption.decrypt(data['email']['host'].encode("ASCII"))
+            email = encryption.decrypt(data['email']['mail'].encode("ASCII"))
+            password = encryption.decrypt(data['email']['password'].encode("ASCII"))
+            ssl = data['email']['ssl']
+            port = data['email']['port']
+            allow_addr = data['email']['allow_addr']
+            sc.email_checker = EmailChecker(host, email, password, ssl, port, allow_addr)
         school_classes.append(sc)
         misc.log(f"Loaded {sc.name}")
     return school_classes

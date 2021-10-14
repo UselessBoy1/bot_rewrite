@@ -4,6 +4,7 @@ import traceback
 import sys
 import asyncio
 
+from discord_components.client import DiscordComponents
 from discord.ext import commands
 from os.path import isfile, join
 from tools import database, misc, config
@@ -33,26 +34,28 @@ def create_default_tables():
     db.create_table("site", "id INTEGER, type TEXT, valuex TEXT")
 
 
-async def run_bot_async(loop):
+async def run_bot_async(loop, q=None):
     asyncio.set_event_loop(loop)
 
     create_default_tables()
 
     bot = commands.Bot(command_prefix=CMD_PREFIXES, intents=discord.Intents.all(), help_command=None)
+    DiscordComponents(bot)
 
     @bot.event
     async def on_ready():
         await bot.change_presence(activity=None, status=discord.Status.online)
+        bot.shared_queue = q
         misc.log("READY")
 
     load_cogs(bot)
     token = os.environ["TOKEN"]
     await bot.start(token, bot=True, reconnect=True)
 
-def run_bot(loop):
+def run_bot(loop, q=None):
     _loop = asyncio.new_event_loop()
     asyncio.set_event_loop(_loop)
-    _loop.run_until_complete(run_bot_async(loop))
+    _loop.run_until_complete(run_bot_async(loop, q))
     _loop.close()
 
 if __name__ == "__main__":

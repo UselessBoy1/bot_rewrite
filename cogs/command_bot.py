@@ -1,7 +1,10 @@
+import random
+
 import discord
 import traceback
 import sys
 import json
+from discord_components import Button, ButtonStyle, InteractionEventType, Interaction
 
 from discord.ext import commands
 from tools import database, permissions, misc, lang, help, config, embeds, encryption
@@ -140,12 +143,38 @@ class CommandBot(commands.Cog):
         else:
             await ctx.send(embeds.err("CONFIG_COLOR", "No member mentioned!"))
 
-
-
     @commands.command(name="detect")
     async def detect_cmd(self, ctx, *args):
         text = " ".join(args)
         await ctx.send(embed=discord.Embed(title=lang.detect_lang(text)[0], color=config.v['CONFIG_COLOR']))
+
+    @commands.command(name="bruh")
+    async def bruh_cmd(self, ctx):
+        await ctx.send(
+            components=[
+                Button(style=random.randint(1,4), label="BRUH x1",id="bruh.1"),
+            ]
+        )
+
+    @commands.Cog.listener("on_button_click")
+    async def on_button_clicked(self, interaction):
+        try:
+            interaction_type, data = interaction.component.id.split('.')
+            if interaction_type == 'bruh':
+                num = int(data) + 1
+                await interaction.edit_origin(
+                    components=[
+                        Button(style=random.randint(1,4), label=f"BRUH x{num}", id=f"bruh.{num}",
+                               custom_id=misc.to_hex(discord.Color.random().to_rgb())),
+                    ]
+                )
+                await interaction.respond(type=6)
+        except Exception as e:
+            traceback.print_exception(type(e), e, e.__traceback__, file=sys.stderr)
+            await interaction.send(embed=embeds.err(reason="Something went wrong!"))
+        # await interaction.send(
+        #     embed=discord.Embed(title=interaction.component.label, color=int(interaction.component.custom_id, 16))
+        # )
 
     @commands.Cog.listener("on_message")
     async def on_message(self, message :discord.Message):

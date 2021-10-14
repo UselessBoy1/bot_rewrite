@@ -17,6 +17,7 @@ def check_database():
 v = {
     'HELP_COLOR': 0x2ecc71,
     'LINK_COLOR': 0x9b59b6,
+    'EMAIL_COLOR': 0x9b59b6,
     'HOMEWORK_COLOR': 0xf1c40f,
     'REDDIT_COLOR': 0xe74c3c,
     'CONFIG_COLOR': 0x3498db,

@@ -69,6 +69,9 @@ def get_every_school_class_json():
         with open(join("school_classes", school_class)) as f:
             yield school_class.lower().replace(".json", ""), json.load(f)
 
+def to_hex(rgb :tuple):
+    return f"0x{hex(rgb[0])[2:]}{hex(rgb[1])[2:]}{hex(rgb[2])[2:]}"
+
 def get_now():
     """
     :return: datetime.now() in Europe/Warsaw timezone

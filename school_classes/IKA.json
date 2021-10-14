@@ -74,7 +74,8 @@
     "EDB": "https://lo8poznan.webex.com/lo8poznan-en/j.php?MTID=m044c9bbf5fdcda2a4f14ab1e67722fb7"
   },
 
-  "channel_id": 849038330527744060,
+  "channel_id": 814458954783916032,
+  "channel_id222": 849038330527744060,
 
   "email":
   {
@@ -82,6 +83,7 @@
     "mail": "gAAAAABhGWZM0CLYIf4eIIqx6N1a5CmOet1abUPUSlNfWvRnsVXrwwP9_WdNQ0YBZyO440Ew8mA_0rhOJfjIPNGeoJoACSAH3DQ2q_tn-2oMuJJ7-EzEPvbt9y0WrOx_bBbHEGnVaEdh",
     "password": "gAAAAABhGWZMU4ugH588KxzDUZu2NsMf9fdfbVfGlxgA1YLTm7X1Qag74ikEYK4kx5uBgusk1h9ItZ6wz-y66A5_smI4hCjYhg==",
     "port": 993,
-    "ssl": true
+    "ssl": true,
+    "allow_addr": "kl2a@lo8.poznan.pl"
   }
 }

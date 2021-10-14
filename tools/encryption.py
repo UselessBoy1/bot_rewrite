@@ -4,7 +4,6 @@ from cryptography.fernet import Fernet
 from hashlib import sha256
 
 key = os.environ['KEY'].encode("ASCII")
-
 f = Fernet(key)
 
 def encrypt(text :str):
