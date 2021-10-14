@@ -151,6 +151,7 @@ class CommandBot(commands.Cog):
     @commands.command(name="bruh")
     async def bruh_cmd(self, ctx):
         await ctx.send(
+            "BRUH",
             components=[
                 Button(style=random.randint(1,4), label="BRUH x1",id="bruh.1"),
             ]
