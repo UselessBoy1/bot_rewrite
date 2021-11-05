@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/menu_style.css') }}">
     <script src="{{ url_for('static', filename='v0.1/js/menu/menu.js') }}"></script>
-    <script src="{{ url_for('static', filename='v0.1/js/tools.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='v0.1/js/view/parent.js') }}"></script>
+    <script src="{{ url_for('static', filename='v0.1/js/loader.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='v0.1/js/tools.js') }}"></script>
     <link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">
 </head>
 <body>
@@ -24,9 +26,13 @@
     </nav>
 
     <article onfocusin="hideMenu()">
-        <h1>TODO: Home page</h1>
+        <h1>TODO: View page</h1>
         <h3>Ciągle nic tu nie ma :(</h3>
     </article>
+
+    <script>
+        var site_json = {{ site_json|safe }}
+    </script>
     <div id="toast"></div>
 </body>
 </html>

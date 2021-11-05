@@ -1,0 +1,143 @@
+.login
+{
+    text-align: right;
+    position: fixed;
+    right: 10px;
+    top: 10px;
+}
+
+.login.link
+{
+    text-decoration: underline;
+    color:white;
+}
+
+.menu.nav
+{
+    text-align: center;
+    flex-direction: column;
+    background-color: #111;
+    position: fixed;
+    left: 0%;
+    top:0%;
+    bottom: 0%;
+    padding-top: 10px;
+    z-index: 10000;
+}
+
+.menu.nav.hidden
+{
+    right: 100%;
+    transition: 0.4s;
+}
+
+.menu.nav.shown
+{
+    right: 60%;
+    transition: 0.4s;
+}
+
+
+.menu.holder
+{
+    height: 100%;
+    overflow-y: auto;
+    padding-left: 10px;
+    padding-right: 50px;
+    direction: rtl;
+}
+
+.menu.holder::-webkit-scrollbar
+{
+    width: 10px;
+}
+
+.menu.holder::-webkit-scrollbar-track
+{
+    background-color: transparent;
+}
+
+.menu.holder::-webkit-scrollbar-thumb
+{
+    background-color: #333;
+    border-radius: 3px;
+}
+
+.menu.holder::-webkit-scrollbar-thumb:hover
+{
+    background-color: #555;
+}
+
+.menu.div
+{
+    display: flex;
+    direction: ltr;
+}
+
+.menu.link.hidden
+{
+    display: none;
+    color: transparent;
+}
+
+.menu.link.shown
+{
+    color: white;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: transparent;
+    overflow: hidden;
+    display: flexbox;
+    flex: 1;
+}
+
+.menu.link.shown:hover
+{
+    background-color: #333;
+}
+
+.menu.link.shown:active
+{
+    background-color: #555;
+}
+
+.menu.toggle
+{
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    position: fixed;
+    font-size: xx-large;
+    margin-left: -50px;
+    -webkit-user-select: none;  
+    -moz-user-select: none;    
+    -ms-user-select: none;      
+    user-select: none;
+}
+
+.menu.toggle.hidden
+{
+    left: 60px;
+    background-color: #111;
+    transition: 0.4s;
+}
+
+.menu.toggle.shown
+{
+    left: 40%;
+    background-color: transparent;
+    transition: 0.4s;
+}
+
+@media (orientation: portrait){
+    .menu.toggle.shown
+    {
+        left: 80%;
+    }
+    .menu.nav.shown
+    {
+        right: 20%;
+    }
+}

@@ -1,0 +1,109 @@
+.hide
+{
+    display: none;
+}
+
+.new
+{
+    position: fixed;
+}
+
+.new.panel
+{
+    width: 200%;
+    height: 200%;
+    top: -1%;
+    left: -1%;
+    background-color: #222;
+    opacity: 0.4;
+}
+
+.new.div
+{
+    width: 100%;
+    height: 100%;
+    top: 0%;
+    left: 0%;
+    padding-left: 50%;
+}
+
+.new.form-panel
+{
+    width: 30%;
+    height: 30%;
+    margin-left: -15%;
+    top: 30%;
+    display: flex;
+    background-color: #444;
+    border-radius: 5px;
+}
+
+.new.form
+{
+    width: 30%;
+    height: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.new.close
+{
+    position: absolute;
+    background-color: transparent;
+    color: white;
+    border:none;
+    width: 30px;
+    height: 30px;
+    margin-top: -5px;
+    top: 0%;
+    right: 0%;
+    padding: none;
+    margin: none;
+}
+
+.new.btn
+{
+    border:none;
+    background-color: #555;
+    color: white;
+    border-radius: 5px;
+    padding:5px;
+    pointer-events:all;
+    flex: 1;
+}
+
+.new.flex-form
+{
+    pointer-events: none;
+    flex: 1;
+    width: 30%;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.new.flex-form.margin
+{
+    align-items: flex-end;
+}
+
+select#elementType
+{
+    appearance: none;
+    background-color: #555;
+    color:white;
+    border-radius: 5px;
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: inherit;
+    line-height: inherit;
+
+    pointer-events:all;
+    width: 120px;
+    text-align: center;
+    flex: 1;
+}

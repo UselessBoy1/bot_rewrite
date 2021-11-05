@@ -30,6 +30,17 @@ def gen_token():
         res += choice(alph)
     return res
 
+def get_json_for_site__id(site_id):
+    elements = db.get_table("website", where=f"site_id='{site_id}'", order_by="num") # TEXT: type, txt, data, INTEGER: num, site_id, id INTEGER
+    res = {
+        "site": [],
+        "id": site_id
+    }
+    if len(elements) == 0:
+        return res
+    for elem in elements:
+        res["site"].append({"type": elem[0], "txt": elem[1], "data": elem[2], "id": elem[5], "num": elem[3]})
+    return res
 
 def get_tasks():
     tasks = {}
@@ -83,6 +94,18 @@ def login():
     if len(msgs) == 1:
         return render_template("adminlogin.html", msg=msgs[0])
     return render_template('adminlogin.html')
+
+@app.route("/v/<id>")
+def view_site(id):
+    site_json = get_json_for_site__id(id)
+    print(site_json)
+    return render_template("view.html", site_json=site_json)
+
+@app.route("/e/<id>")
+def edit_site(id):
+    site_json = get_json_for_site__id(id)
+    return render_template("edit.html", site_json=site_json)
+
 
 @app.route('/logout')
 def logout():

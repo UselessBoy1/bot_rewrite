@@ -174,9 +174,6 @@ class CommandBot(commands.Cog):
         except Exception as e:
             traceback.print_exception(type(e), e, e.__traceback__, file=sys.stderr)
             await interaction.send(embed=embeds.err(reason="Something went wrong!"))
-        # await interaction.send(
-        #     embed=discord.Embed(title=interaction.component.label, color=int(interaction.component.custom_id, 16))
-        # )
 
     @commands.Cog.listener("on_message")
     async def on_message(self, message :discord.Message):
