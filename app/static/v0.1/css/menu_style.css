@@ -117,6 +117,7 @@
     user-select: none;
 }
 
+
 .menu.toggle.hidden
 {
     left: 60px;
@@ -129,6 +130,12 @@
     left: 40%;
     background-color: transparent;
     transition: 0.4s;
+}
+
+.menu.toggle.hidden:active
+.menu.toggle.shown:active
+{
+    background-color: #333;
 }
 
 @media (orientation: portrait){

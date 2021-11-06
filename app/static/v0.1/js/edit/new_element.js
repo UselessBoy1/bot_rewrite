@@ -3,21 +3,18 @@ var form_div = document.querySelector('.new.div');
 
 function openNewElementForm()
 {
-    console.log("NONE");
     selected_div = null;
     form_div.classList.remove('hide');
 }
 
 function openNewElementFormForDiv(div)
 {
-    console.log('show2');
     selected_div = div;
     form_div.classList.remove('hide');
 }
 
 function closeNewElementForm()
 {
-    console.log('hide');
     form_div.classList.add('hide');
 }
 
@@ -37,10 +34,16 @@ function newElement()
 {
     closeNewElementForm();
     let element = addParent(createElement(getNewElement()));
-    if(!selected_div)
+    if(selected_div !== null)
     {
-        console.log("not UN");
-        article.insertBefore(element, selected_div);
+        if('nextSibling' in selected_div)
+        {
+            article.insertBefore(element, selected_div.nextSibling);
+        }
+        else
+        {
+            article.insertBefore(element, selected_div);
+        }
     }
     else
     {

@@ -22,6 +22,7 @@ function toggleMenu()
 
 function hideMenu()
 {
+    isMenuVisible = false;
     let menuElements = document.querySelectorAll('.menu');
     menuElements.forEach((element) => {
         element.classList.remove('shown');
@@ -29,7 +30,7 @@ function hideMenu()
      });
 }
 
-function addElement(txt, href)
+function addMenuElement(txt, href)
 {
     let holder = document.querySelector('.menu.holder');
     let div = document.createElement('div');

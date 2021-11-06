@@ -1,11 +1,10 @@
 function addParent(element)
 {
     let div = document.createElement('div');
-    div.classList.add('gray5');
     div.classList.add('edit');
     div.classList.add('div');
-    
-    element.contentEditable = true;
+
+    element.querySelector('.contenteditableElement').contentEditable = true;
 
     div.appendChild(element);
 
@@ -33,28 +32,28 @@ function addParent(element)
     upBtn.classList.add('edit');
     upBtn.classList.add('btn');
     upBtn.innerText = "UP";
-    upBtn.onclick = moveUp;
+    upBtn.addEventListener('click', () =>  moveUp(div));
     controlsDiv.appendChild(upBtn);
 
     let downBtn = document.createElement('button');
     downBtn.classList.add('edit');
     downBtn.classList.add('btn');
     downBtn.innerText = "DOWN";
-    downBtn.onclick = moveDown;
+    downBtn.addEventListener('click', () =>  moveDown(div));
     controlsDiv.appendChild(downBtn);
 
     let delBtn = document.createElement('button');
     delBtn.classList.add('edit');
     delBtn.classList.add('btn');
     delBtn.innerText = "DELETE";
-    delBtn.onclick = deleteDiv;
+    delBtn.addEventListener('click', () =>  deleteDiv(div));
     controlsDiv.appendChild(delBtn);
 
     let addOtherBtn = document.createElement('button');
     addOtherBtn.classList.add('edit');
     addOtherBtn.classList.add('btn');
-    addOtherBtn.innerText = "UP";
-    addOtherBtn.onclick = openNewElementFormForDiv;
+    addOtherBtn.innerText = "NEW";
+    addOtherBtn.addEventListener('click', () => openNewElementFormForDiv(div));
     controlsDiv.appendChild(addOtherBtn);
 
     div.appendChild(controlsDiv);
