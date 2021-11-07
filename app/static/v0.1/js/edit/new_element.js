@@ -18,14 +18,21 @@ function closeNewElementForm()
     form_div.classList.add('hide');
 }
 
+function generateID()
+{
+    let suffix = (new Date()).getTime();
+    return "" + suffix;
+}
+
 function getNewElement()
 {
+    let id = generateID();
     let selected = document.querySelector('#elementType').value;
-    console.log(selected);
     let element = {
         txt: "HERE!",
         type: selected,
-        data: selected
+        data: "",
+        id: id
     }
     return element;
 }
@@ -33,7 +40,8 @@ function getNewElement()
 function newElement()
 {
     closeNewElementForm();
-    let element = addParent(createElement(getNewElement()));
+    let json = getNewElement();
+    let element = addParent(createElement(json), json.data);
     if(selected_div !== null)
     {
         if('nextSibling' in selected_div)

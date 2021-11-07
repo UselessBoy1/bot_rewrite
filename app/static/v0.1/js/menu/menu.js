@@ -53,4 +53,13 @@ function addMenuElement(txt, href)
     }
     div.appendChild(link);
     holder.appendChild(div);
+    return div;
+}
+
+function updateMenu(edit_div, menu_div)
+{
+    let txt = edit_div.parentNode.querySelector('.contenteditableElement').innerText;
+    let data = edit_div.parentNode.querySelector('.data-input').value;
+    menu_div.querySelector('.menu.link').innerText = txt;
+    menu_div.querySelector('.menu.link').href = data;
 }

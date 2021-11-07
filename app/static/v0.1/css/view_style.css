@@ -1,4 +1,11 @@
-pre
+.title-edit-place,
+.menu-edit-place
 {
-    border-radius: 10px;
+    display: none;
+}
+
+
+article
+{
+    text-align: left;
 }

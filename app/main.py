@@ -30,17 +30,34 @@ def gen_token():
         res += choice(alph)
     return res
 
+def get_id():
+    return str(int(datetime.datetime.now().timestamp()))
+
+def get_other_sites():
+    sites = db.get_table("website", where="type='title'", order_by="id")
+    res = []
+    for site in sites:
+        res.append({"txt": site[1], "id": site[5]})
+    return res
+
 def get_json_for_site__id(site_id):
-    elements = db.get_table("website", where=f"site_id='{site_id}'", order_by="num") # TEXT: type, txt, data, INTEGER: num, site_id, id INTEGER
+    elements = db.get_table("website", where=f"site_id='{site_id}'", order_by="num") # TEXT: type, txt, data, INTEGER: num TXT: site_id, id
     res = {
         "site": [],
-        "id": site_id
+        "id": site_id,
+        "other": get_other_sites()
     }
     if len(elements) == 0:
+        res["site"].append({"type": "title", "txt": "New Page", "data": "", "id": get_id(), "num": 0})
         return res
     for elem in elements:
         res["site"].append({"type": elem[0], "txt": elem[1], "data": elem[2], "id": elem[5], "num": elem[3]})
     return res
+
+def set_json_for_site_id(site_id, site_json):
+    db.delete_from_table("website", where=f"site_id='{site_id}'")
+    for node in site_json:
+        db.add_to_table("website","type, txt, num, id, site_id, data" ,f"'{node['type']}', '{node['txt']}', {node['num']}, '{node['id']}', '{site_id}', '{node['data']}'")
 
 def get_tasks():
     tasks = {}
@@ -73,10 +90,7 @@ school_classes, plans = get_school_classes()
 
 @app.route('/')
 def index():
-    msgs = get_flashed_messages()
-    if len(msgs) == 1:
-        return render_template("index.html", msg=msgs[0])
-    return render_template("index.html")
+    return view_site('main')
 
 @app.route('/infa')
 def infa():
@@ -85,124 +99,27 @@ def infa():
         return render_template("infa.html",infa=gen_load_infa(), msg=msgs[0])
     return render_template("infa.html",infa=gen_load_infa())
 
-@app.route('/login')
-def login():
-    token = request.cookies.get('auth', None)
-    if token in tokens:
-        return redirect('/admin')
-    msgs = get_flashed_messages()
-    if len(msgs) == 1:
-        return render_template("adminlogin.html", msg=msgs[0])
-    return render_template('adminlogin.html')
-
 @app.route("/v/<id>")
 def view_site(id):
     site_json = get_json_for_site__id(id)
-    print(site_json)
-    return render_template("view.html", site_json=site_json)
+    return render_template("view.html", site_json=site_json, site_id=id)
 
 @app.route("/e/<id>")
 def edit_site(id):
     site_json = get_json_for_site__id(id)
-    return render_template("edit.html", site_json=site_json)
+    return render_template("edit.html", site_json=site_json, site_id=id, new_site_id=get_id())
 
 
-@app.route('/logout')
-def logout():
-    resp = make_response(redirect('/login'))
-    resp.set_cookie('auth', '', expires=0)
-    return resp
-
-@app.route("/admin", methods= ['POST', 'GET'])
-def admin():
+@app.route('/save',  methods=['POST'])
+def save_edited_json():
     token = request.cookies.get('auth', None)
+    resp = Response(status=200)
     if token not in tokens:
-        if request.method == 'GET':
-            return redirect('login')
+        if not encryption.is_web_pwd_ok(request.json['pwd']):
+            new_token = gen_token()
+            resp.set_cookie('auth', new_token)
+            tokens.append(new_token)
         else:
-            try:
-                pwd = request.form['pwd']
-                if encryption.is_web_pwd_ok(pwd):
-                    flash("Zle haslo")
-                    return redirect('login')
-            except:
-                 return Response(status=403)
-
-
-    tasks = get_tasks()
-    msgs = get_flashed_messages()
-    new_token = gen_token()
-    if token not in tokens:
-        tokens.append(new_token)
-        token = new_token
-    if len(msgs) == 1:
-        resp = make_response(render_template("admin.html",infa=gen_load_infa(), plan=str(plans), tasks=tasks, msg=msgs[0]))
-    else:
-        resp = make_response(render_template("admin.html",infa=gen_load_infa(), plan=str(plans), tasks=tasks))
-    resp.set_cookie('auth', token)
-    return resp
-
-@app.route('/startsave')
-def start_save():
-    token = request.cookies.get('auth', None)
-    if token not in tokens:
-        print(tokens, token)
-        return Response(status=403)
-    tmp_save.clear()
-    return Response(status=200)
-
-@app.route('/save', methods=['POST'])
-def save_elem():
-    token = request.cookies.get('auth', None)
-    if token not in tokens:
-        return Response(status=403)
-    data = request.data.decode("UTF-8")
-    if data.startswith("text="):
-        tmp_save.append(("T", data[5:]))
-    elif data.startswith("code="):
-        tmp_save.append(("C",data[5:]))
-    elif data.startswith("header="):
-        tmp_save.append(("H",data[7:]))
-    return Response(status=200)
-
-@app.route('/endsave')
-def end_save():
-    token = request.cookies.get('auth', None)
-    if token not in tokens:
-        return Response(status=403)
-    site = db.get_table('site')
-    num = len(site)
-    x = 0
-    for t in tmp_save:
-        code = t[1].replace("'", "''")
-        if x < num:
-            db.replace_in_table('site', ['type', 'valuex'], [f"'{t[0]}'", f"'{code}'"], where=f'id={x}')
-            x+=1
-        else:
-            db.add_to_table('site', 'id, type, valuex', f"{num}, '{t[0]}', '{code}'")
-            num+=1
-            x+=1
-    if x < len(site):
-        db.delete_from_table('site', f'id >= {x}')
-    return Response(status=200)
-
-@app.route('/sendadd', methods= ['POST', 'GET'] )
-def send_add():
-    if request.method == 'GET':
-        return redirect(url_for('index'), code=301)
-    else:
-        token = request.cookies.get('auth', None)
-        if token not in tokens:
             return Response(status=403)
-
-        school_class = request.form['sc']
-        weekday = int(request.form['weekday'])
-        lesson_num, lesson_index = [int(x) for x in request.form['lessons'].split('.')]
-        year, month, day = [int(x) for x in request.form['date'].split("-")]
-        flash(f"Zapisano {request.form['text']} {plans[school_class][weekday][lesson_num][lesson_index]} {request.form['date']}")
-        datetime_epoch = datetime.datetime(year=year,month=month, day=day,hour=config.LESSON_TIMES[lesson_num][0],minute=config.LESSON_TIMES[lesson_num][1]).timestamp()
-        crypto = encryption.encrypt(request.form['text']).decode("UTF-8")
-
-        db.add_to_table("tasks", "channel_id, epoch, lesson, msg", f"'{school_classes[school_class]['channel_id']}', '{int(datetime_epoch)}', '{school_class}', '{crypto}'")
-
-        return redirect(url_for('admin'), code=307)
+    set_json_for_site_id(request.json['id'], request.json['site'])
+    return resp

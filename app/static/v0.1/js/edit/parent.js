@@ -1,8 +1,9 @@
-function addParent(element)
+function addParent(element, data)
 {
     let div = document.createElement('div');
     div.classList.add('edit');
     div.classList.add('div');
+    div.addEventListener('focusout',() => element.dispatchEvent(new Event('focusout')));
 
     element.querySelector('.contenteditableElement').contentEditable = true;
 
@@ -19,7 +20,7 @@ function addParent(element)
     let inputData = document.createElement('input');
     inputData.classList.add('edit');
     inputData.classList.add('data-input');
-    inputData.innerText = element.data;
+    inputData.value = data;
     dataDiv.appendChild(inputData);
 
     div.appendChild(dataDiv);
@@ -55,6 +56,13 @@ function addParent(element)
     addOtherBtn.innerText = "NEW";
     addOtherBtn.addEventListener('click', () => openNewElementFormForDiv(div));
     controlsDiv.appendChild(addOtherBtn);
+
+    let copyIDbtn = document.createElement('button');
+    copyIDbtn.classList.add('edit');
+    copyIDbtn.classList.add('btn');
+    copyIDbtn.innerText = "COPY ID";
+    copyIDbtn.addEventListener('click', () => copyID(div));
+    controlsDiv.appendChild(copyIDbtn);
 
     div.appendChild(controlsDiv);
     return div;

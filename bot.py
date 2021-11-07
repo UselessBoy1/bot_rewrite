@@ -33,7 +33,7 @@ def create_default_tables():
     db.create_table("config", "namex TEXT, valuex TEXT, isint INTEGER")
     db.create_table("reddit", "followed TEXT")
     db.create_table("site", "id INTEGER, type TEXT, valuex TEXT")
-    db.create_table("website", "type TEXT, txt TEXT, data TEXT, num INTEGER, site_id TEXT, id INTEGER")
+    db.create_table("website", "type TEXT, txt TEXT, data TEXT, num INTEGER, site_id TEXT, id TEXT")
 
 
 async def run_bot_async(loop, q=None):

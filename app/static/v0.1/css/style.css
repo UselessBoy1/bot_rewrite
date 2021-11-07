@@ -27,11 +27,25 @@ body::-webkit-scrollbar-thumb:hover
     background-color: #555;
 }
 
+pre
+{
+    border-radius: 10px;
+}
+
 article
 {
     margin-top: 100px;
     padding-left: 20%;
     padding-right: 20%;
+}
+
+@media(orientation: portrait)
+{
+    article
+    {
+        padding-left: 5%;
+        padding-right: 5%;
+    }
 }
 
 button
@@ -57,10 +71,26 @@ input
     text-decoration: none;
     color: green;
 }
+
 .link:visited
 {
     color: orange;
 }
+
+.page-link
+{
+    color: white;
+    text-decoration: underline;
+    padding: 5px;
+    border-radius: 5px;
+    background-color:transparent;
+}
+
+.page-link:hover
+{
+    background-color: #555;
+}
+
 
 /* The toast - position it at the bottom and in the middle of the screen */
 #toast {

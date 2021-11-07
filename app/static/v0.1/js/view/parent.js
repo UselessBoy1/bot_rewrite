@@ -1,4 +1,4 @@
-function addParent(element)
+function addParent(element, data)
 {
     return element;
 }

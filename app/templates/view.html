@@ -6,28 +6,26 @@
     <title>Infa</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/menu_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/view_style.css') }}">
     <script src="{{ url_for('static', filename='v0.1/js/menu/menu.js') }}"></script>
     <script src="{{ url_for('static', filename='v0.1/js/view/parent.js') }}"></script>
     <script src="{{ url_for('static', filename='v0.1/js/loader.js') }}" defer></script>
     <script src="{{ url_for('static', filename='v0.1/js/tools.js') }}"></script>
-    <link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 </head>
 <body>
     <nav>
         <div class="login">
-            <a class="login link" href="/login">Login</a>
+            <a class="login link" href="/e/{{ site_id }}">Edit</a>
         </div>
         <div class="menu nav hidden">
             <button onclick="toggleMenu()" class="menu toggle hidden">≡</button>
-            <div class="menu holder hidden">
-                <div class="menu div hidden"><a class="menu link hidden" href="/infa">Stara wersja strony</a></div>
-            </div>
+            <div class="menu holder hidden"></div>
         </div>
     </nav>
 
     <article onfocusin="hideMenu()">
-        <h1>TODO: View page</h1>
-        <h3>Ciągle nic tu nie ma :(</h3>
+        <div id="none"></div>
     </article>
 
     <script>

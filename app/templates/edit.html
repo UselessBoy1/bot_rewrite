@@ -8,11 +8,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/menu_style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/edit_style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/new_element.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/view_style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/prism.css') }}">
     <script src="{{ url_for('static', filename='v0.1/js/menu/menu.js') }}"></script>
     <script src="{{ url_for('static', filename='v0.1/js/edit/parent.js') }}"></script>
     <script src="{{ url_for('static', filename='v0.1/js/edit/place_manip.js') }}"></script>
+    <script src="{{ url_for('static', filename='v0.1/js/edit/action_buttons.js') }}"></script>
     <script src="{{ url_for('static', filename='v0.1/js/edit/save.js') }}"></script>
     <script src="{{ url_for('static', filename='v0.1/js/edit/new_element.js') }}" defer></script>
     <script src="{{ url_for('static', filename='v0.1/js/loader.js') }}" defer></script>
@@ -23,18 +23,19 @@
 <body>
     <nav>
         <div class="login">
-            <a class="login link" href="/login">Login</a>
+            <a class="login link" href="/v/{{ site_id }}">View</a>
         </div>
         <div class="menu nav hidden">
             <button onclick="toggleMenu()" class="menu toggle hidden">≡</button>
-            <div class="menu holder hidden">
-                <div class="menu div hidden"><a class="menu link hidden" href="/infa">Stara wersja strony</a></div>
-            </div>
+            <div class="menu holder hidden"></div>
         </div>
     </nav>
 
 
     <button onclick="openNewElementForm()" class="element-btn">New Element</button>
+    <button onclick="copySiteID()" class="element-btn">Copy Site ID</button>
+    <button onclick="showAllPages()" class="element-btn">All pages</button>
+    <a class="element-btn" href="/e/{{ new_site_id }}">New Page</a>
     <button onclick="save()" class="save-btn">Save</button>
     <article onfocusin="hideMenu()">
 
@@ -54,6 +55,8 @@
                             <option value="code">Code</option>
                             <option value="header">Header</option>
                             <option value="text">Text</option>
+                            <option value="menu">Menu Item</option>
+                            <option value="link">Link</option>
                         </select>
                     </form>
                 </div>
@@ -63,6 +66,9 @@
             </div>
             <button onclick="closeNewElementForm()" class="new close">✖</button>
         </div>
+    </div>
+    <div id="saving-panel" class="hide">
+        <h1 id="saving-txt">SAVING...</h1>
     </div>
     <div id="toast"></div>
 </body>

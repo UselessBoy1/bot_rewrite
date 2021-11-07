@@ -22,7 +22,7 @@
     top:0%;
     bottom: 0%;
     padding-top: 10px;
-    z-index: 10000;
+    z-index: 10;
 }
 
 .menu.nav.hidden
