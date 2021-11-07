@@ -66,15 +66,10 @@ input
     padding:5px;
 }
 
-.link
+a
 {
     text-decoration: none;
-    color: green;
-}
-
-.link:visited
-{
-    color: orange;
+    color: #4f4;
 }
 
 .page-link
@@ -85,12 +80,6 @@ input
     border-radius: 5px;
     background-color:transparent;
 }
-
-.page-link:hover
-{
-    background-color: #555;
-}
-
 
 /* The toast - position it at the bottom and in the middle of the screen */
 #toast {

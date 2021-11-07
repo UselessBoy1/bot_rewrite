@@ -16,7 +16,7 @@ function createElement(element)
         code.classList.add(`contenteditableElement`);
         code.id = element.id;
         code.setAttribute("type", "code"); 
-        code.innerHTML = element.txt;//.replaceAll('\\$', '\n');
+        code.innerHTML = element.txt;
         pre.appendChild(code);
         div.appendChild(pre);
         div.addEventListener('focusout', () => generatePrism());
