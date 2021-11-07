@@ -4,7 +4,7 @@ function showAllPages()
     site_json['other'].forEach(other => {
         showMsg += `${other.txt} -> ${other.id}\n`;
     });
-    alert(showMsg);
+    messageBox(showMsg);
 }
 
 function copySiteID()

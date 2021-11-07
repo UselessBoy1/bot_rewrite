@@ -37,7 +37,7 @@ def get_other_sites():
     sites = db.get_table("website", where="type='title'", order_by="id")
     res = []
     for site in sites:
-        res.append({"txt": site[1], "id": site[5]})
+        res.append({"txt": site[1], "id": site[4]})
     return res
 
 def get_json_for_site__id(site_id):

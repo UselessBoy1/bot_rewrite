@@ -8,12 +8,14 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/menu_style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/edit_style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/new_element.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/txt_panel.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/prism.css') }}">
     <script src="{{ url_for('static', filename='v0.1/js/menu/menu.js') }}"></script>
     <script src="{{ url_for('static', filename='v0.1/js/edit/parent.js') }}"></script>
     <script src="{{ url_for('static', filename='v0.1/js/edit/place_manip.js') }}"></script>
     <script src="{{ url_for('static', filename='v0.1/js/edit/action_buttons.js') }}"></script>
     <script src="{{ url_for('static', filename='v0.1/js/edit/save.js') }}"></script>
+    <script src="{{ url_for('static', filename='v0.1/js/edit/txt_panel.js') }}"></script>
     <script src="{{ url_for('static', filename='v0.1/js/edit/new_element.js') }}" defer></script>
     <script src="{{ url_for('static', filename='v0.1/js/loader.js') }}" defer></script>
     <script src="{{ url_for('static', filename='v0.1/js/prism.js') }}"></script>
@@ -65,6 +67,12 @@
                 </div>
             </div>
             <button onclick="closeNewElementForm()" class="new close">✖</button>
+        </div>
+    </div>
+    <div id="txt-panel" class="hide">
+        <div id="txt-panel-holder">
+            <button id="close-txt-panel-btn" onclick="closeMessageBox()">✖</button>
+            <p id="txt-in-panel"></p>
         </div>
     </div>
     <div id="saving-panel" class="hide">
