@@ -90,7 +90,7 @@ school_classes, plans = get_school_classes()
 
 @app.route('/')
 def index():
-    return view_site('main')
+    return redirect('/v/main')
 
 @app.route('/infa')
 def infa():
