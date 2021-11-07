@@ -19,6 +19,7 @@ function createElement(element)
         code.innerText = element.txt;
         pre.appendChild(code);
         div.appendChild(pre);
+        div.addEventListener('focusout', () => generatePrism());
         generatePrism();
         return div;
     }
