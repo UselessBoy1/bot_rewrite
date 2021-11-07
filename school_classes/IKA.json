@@ -2,47 +2,53 @@
   "plan":
   [
     [
-      ["ANG", "JUST"],
-      ["FIZ"],
-      ["EDB"],
+      ["WF"],
+      ["WF"],
+      ["CHE"],
+      ["REL"],
+      ["POL"],
+      ["NIE G", "NIE L"],
+      ["PP"],
+      ["FIZ"]
+    ],
+    [
+      ["GEO"],
+      ["BIO"],
+      ["POL"],
+      ["POL"],
+      ["MAT"],
+      ["MAT"],
+      ["REL"],
+      ["ANG"]
+    ],
+    [
+      ["WF"],
+      ["MAT"],
+      ["BIO"],
       ["HIS"],
+      ["NIE G", "NIE L"],
+      ["WOS"],
+      ["POL"],
+      ["GEO"]
+    ],
+    [
+      ["-"],
+      ["INF"],
+      ["INF"],
+      ["ZZW"],
+      ["INF", "JUST"],
+      ["INF", "JUST"],
       ["MAT"],
       ["MAT"]
     ],
     [
-      ["CHE"],
-      ["NIE G", "NIE L"],
-      ["REL"],
-      ["MAT"],
-      ["GEO"],
-      ["WF"]
-    ],
-    [
-      ["-"],
-      ["-"],
-      ["NIE G", "NIE L"],
-      ["POL"],
-      ["BIO"],
-      ["WOS"]
-    ],
-    [
-      ["ZZW"],
-      ["MAT"],
-      ["REL"],
+      ["INF"],
+      ["INF", "JUST"],
+      ["ANG", "INF"],
+      ["ANG", "INF"],
       ["FIZ"],
-      ["POL"],
-      ["POL"],
-      ["HIS"]
-    ],
-    [
-      ["POL"],
-      ["MAT"],
-      ["WF"],
-      ["ANG", "INF"],
-      ["ANG", "INF"],
-      ["INF", "JUST"],
-      ["INF", "JUST"],
-      ["PLA"]
+      ["HIS"],
+      ["CHE"]
     ],
     [
       ["-"]
@@ -54,14 +60,14 @@
 
   "links":
   {
-    "GEO": "https://lo8poznan.webex.com/meet/maria.aleszczyk",
+    "GEO": "https://lo8poznan.webex.com/meet/janusz.gorny",
     "ANG": "https://lo8poznan.webex.com/meet/agnieszka.mazurek",
     "JUST": "https://lo8poznan.webex.com/meet/katarzyna.manczak",
     "HIS": "https://lo8poznan.webex.com/meet/juliusz.kaczanowski",
     "WOS": "https://lo8poznan.webex.com/meet/juliusz.kaczanowski",
-    "FIZ": "https://lo8poznan.webex.com/meet/justyna.lodyga",
+    "FIZ": "https://lo8poznan.webex.com/meet/pawel.saneluta",
     "MAT": "https://lo8poznan.webex.com/meet/eliza.baranowska",
-    "CHE": "https://lo8poznan.webex.com/lo8poznan/j.php?MTID=mc4a9fc2930f19795c37f6e779140dbf8",
+    "CHE": "https://lo8poznan.webex.com/meet/marzena.wojciechowska.nowak",
     "POL": "https://lo8poznan.webex.com/meet/aneta.cierechowicz",
     "NIE G": "https://lo8poznan.webex.com/meet/magdalena.zmudzinska",
     "NIE L": "https://lo8poznan.webex.com/meet/kinga.jankowska",
@@ -70,8 +76,7 @@
     "REL": "https://lo8poznan.webex.com/meet/marcin.skowron",
     "WF": "https://meetingsemea30.webex.com/meetingsemea30/j.php?MTID=m4afdcc7be7d11dba2334c48baf98e58f",
     "BIO": "https://lo8poznan.webex.com/meet/katarzyna.wasielewska",
-    "PLA": "https://meetingsemea35.webex.com/meet/pr1752835001",
-    "EDB": "https://lo8poznan.webex.com/lo8poznan-en/j.php?MTID=m044c9bbf5fdcda2a4f14ab1e67722fb7"
+    "PP": "https://lo8poznan.webex.com/meet/dorota.kozlik"
   },
 
   "channel_id": 849038330527744060,
