@@ -77,16 +77,6 @@ a
     color: #4f4;
 }
 
-.page-link
-{
-    color: white;
-    text-decoration: underline;
-    padding: 5px;
-    border-radius: 5px;
-    background-color:transparent;
-}
-
-
 
 /* The toast - position it at the bottom and in the middle of the screen */
 #toast {

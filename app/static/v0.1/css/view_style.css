@@ -4,6 +4,29 @@
     display: none;
 }
 
+.page-link
+{
+    display: block;
+    width: 20%;
+    text-align: center;
+    border: 2px solid white;
+    border-radius: 5px;
+    padding: 5px;
+    color: white;
+    text-decoration: none;
+}
+
+.page-link::after
+{
+    content: '';
+    background: url('/static/link.ico');
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+    background-size:cover;
+    position:absolute;
+}
+
 article
 {
     text-align: left;

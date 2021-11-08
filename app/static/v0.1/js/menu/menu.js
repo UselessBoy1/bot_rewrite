@@ -37,6 +37,7 @@ function addMenuElement(txt, href)
     let link = document.createElement('a');
     link.innerText = txt;
     link.href = href;
+    link.onclick = hideMenu;
     link.classList.add('menu');
     div.classList.add('menu');
     link.classList.add('link');

@@ -91,3 +91,12 @@
 {
     color: sandybrown;
 }
+
+.page-link
+{
+    color: white;
+    text-decoration: underline;
+    padding: 5px;
+    border-radius: 5px;
+    background-color:transparent;
+}
