@@ -12,6 +12,8 @@
     border: 2px solid white;
     border-radius: 5px;
     padding: 5px;
+    padding-left: 25px;
+    padding-right: 25px;
     color: white;
     text-decoration: none;
 }
