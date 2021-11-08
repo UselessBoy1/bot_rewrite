@@ -77,6 +77,7 @@ class SchoolClass:
             self.check_email.start()
         self.remind.start()
         self.rerun()
+        self.edit_msg.start()
 
     def rerun(self):
         self.set_reminders()
@@ -228,6 +229,15 @@ class SchoolClass:
             await self.edit_message.edit(embed=embed)
 
     #region TASKS
+
+    @tasks.loop(hours=24)
+    async def edit_msg(self):
+        now = misc.get_now()
+        new_whole_hour = datetime.datetime(now.year, now.month, now.hour, 5).timestamp() - now.timestamp()
+        await asyncio.sleep(new_whole_hour)
+        while True:
+            await self.edit_message.edit(self.get_link(None))
+            await asyncio.sleep(60)
 
     @tasks.loop(seconds=1)
     async def remind(self):
@@ -427,7 +437,7 @@ class LessonBot(commands.Cog):
             msg = await ctx.send(embed=embed)
             if school_class.edit_message is not None and link is None:
                 await school_class.edit_message.delete()
-                school_class.edit_message = msg
+            school_class.edit_message = msg
 
 
     @commands.command(name="plan")
