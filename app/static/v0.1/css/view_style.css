@@ -33,3 +33,11 @@ article
 {
     text-align: left;
 }
+
+@media(orientation:portrait)
+{
+    .page-link
+    {
+        width: 80%;
+    }
+}
