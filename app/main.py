@@ -57,6 +57,7 @@ def get_json_for_site__id(site_id):
 def set_json_for_site_id(site_id, site_json):
     db.delete_from_table("website", where=f"site_id='{site_id}'")
     for node in site_json:
+        node['txt'] = node['txt'].replace('\'', '\'\'')
         db.add_to_table("website","type, txt, num, id, site_id, data" ,f"'{node['type']}', '{node['txt']}', {node['num']}, '{node['id']}', '{site_id}', '{node['data']}'")
 
 def get_tasks():
