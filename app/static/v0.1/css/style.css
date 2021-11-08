@@ -6,22 +6,27 @@ body
     color: white;
 }
 
+pre::-webkit-scrollbar,
 body::-webkit-scrollbar
 {
     width: 10px;
+    height: 10px;
 }
 
+pre::-webkit-scrollbar-track,
 body::-webkit-scrollbar-track
 {
     background-color: #404040;
 }
 
+pre::-webkit-scrollbar-thumb,
 body::-webkit-scrollbar-thumb
 {
     background-color: #111;
     border-radius: 3px;
 }
 
+pre::-webkit-scrollbar-thumb:hover,
 body::-webkit-scrollbar-thumb:hover
 {
     background-color: #555;
@@ -35,8 +40,8 @@ pre
 article
 {
     margin-top: 100px;
-    padding-left: 20%;
-    padding-right: 20%;
+    padding-left: 17%;
+    padding-right: 17%;
 }
 
 @media(orientation: portrait)
@@ -80,6 +85,8 @@ a
     border-radius: 5px;
     background-color:transparent;
 }
+
+
 
 /* The toast - position it at the bottom and in the middle of the screen */
 #toast {
