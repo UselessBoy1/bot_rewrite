@@ -36,6 +36,7 @@ function createElement(element)
         let menu_div = addMenuElement(element.txt, element.data);
         div.addEventListener('focusout', () => updateMenu(div, menu_div));
         div.addEventListener('delete', () => menu_div.remove());
+        div.classList.add('center');
     }
     else if(element.type == 'menu')
     {

@@ -7,15 +7,24 @@
 .page-link
 {
     display: block;
-    width: 20%;
+    width: 30%;
     text-align: center;
     border: 2px solid white;
     border-radius: 5px;
     padding: 5px;
     padding-left: 25px;
     padding-right: 25px;
+    margin-top: 10px;
     color: white;
     text-decoration: none;
+}
+
+@media(orientation:portrait)
+{
+    .page-link
+    {
+        width: 100%;
+    }
 }
 
 .page-link::after
@@ -34,10 +43,9 @@ article
     text-align: left;
 }
 
-@media(orientation:portrait)
+.center
 {
-    .page-link
-    {
-        width: 80%;
-    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
