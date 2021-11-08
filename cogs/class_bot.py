@@ -15,7 +15,7 @@ LESSON_TIMES = config.LESSON_TIMES
 LESSON_TIMES_ENDS = config.LESSON_TIMES_ENDS
 
 # should be 0
-DEBUG_TIME_CHANGE = 0
+DEBUG_TIME_CHANGE = -3600
 
 class Reminder:
     def __init__(self, r_time :int, embed, index=-1):
