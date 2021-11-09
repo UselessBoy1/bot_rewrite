@@ -32,7 +32,7 @@ function save()
         if('querySelector' in node && typeof node.querySelector !== 'undefined' && node.id != 'none')
         {
             let type = node.querySelector('.contenteditableElement').getAttribute("type");
-            let txt = node.querySelector('.contenteditableElement').innerText;
+            let txt = node.querySelector('.contenteditableElement').innerText.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
             let id = node.querySelector('.contenteditableElement').id;
             let data = node.querySelector('.data-input').value;
             new_site_json['site'].push({type: type, txt: txt, id:id, data: data, num: num});
