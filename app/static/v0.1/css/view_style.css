@@ -7,7 +7,7 @@
 .page-link
 {
     display: block;
-    width: 30%;
+    width: 60%;
     text-align: center;
     border: 2px solid white;
     border-radius: 5px;
@@ -25,17 +25,6 @@
     {
         width: 100%;
     }
-}
-
-.page-link::after
-{
-    content: '';
-    background: url('/static/link.ico');
-    width: 20px;
-    height: 20px;
-    margin-left: 10px;
-    background-size:cover;
-    position:absolute;
 }
 
 article
