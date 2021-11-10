@@ -1,5 +1,6 @@
 import discord
 import traceback
+import random
 import sys
 import json
 
@@ -8,6 +9,7 @@ from tools import database, permissions, misc, lang, help, config, embeds, encry
 
 class DominationBot(commands.Cog):
     members_ids_banned_from_voice = []
+    members_ids_to_fuck_with = []
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -100,9 +102,30 @@ class DominationBot(commands.Cog):
         embed = discord.Embed(title="Voice banned", description=", ".join(banned), color=config.v['CONFIG_COLOR'])
         await ctx.send(embed=embed)
 
+    @commands.command("fuck")
+    async def fuck_cmd(self, ctx, *args):
+        if not permissions.check_permission(ctx, 'ADMIN'):
+            await ctx.send(embeds.permission_denied)
+            return
+        members_ids = self.resolve_voice_cmd(list(args))
+        for i in range(20):
+            for member_id in members_ids:
+                try:
+                    voice = random.choice(ctx.guild.voice_channels)
+                    member = ctx.guild.get_member(member_id)
+                    if member is None:
+                        continue
+                    if misc.in_voice_channel(member):
+                        await member.move_to(voice)
+                except:
+                    pass
+        await ctx.send("Fucked them!")
+
+
     @tasks.loop(seconds=10)
     async def check_queue(self):
         await self.bot.wait_until_ready()
+
 
 
 def setup(bot):
