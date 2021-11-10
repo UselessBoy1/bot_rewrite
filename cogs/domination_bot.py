@@ -48,6 +48,8 @@ class DominationBot(commands.Cog):
                     member = ctx.guild.get_member(member_id)
                     if member is None:
                         continue
+                    if misc.in_voice_channel(member):
+                        await member.move_to(None)
                     banned.append(str(member))
                     self.members_ids_banned_from_voice.append(member_id)
                 except:
