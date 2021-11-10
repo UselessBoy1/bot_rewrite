@@ -88,6 +88,30 @@
     "fields": {}
   },
 
+  "voice_ban": {
+    "protection": "ADMIN",
+    "brief": "daje voice bana",
+    "description": "%prefix%voice_van <id_usera>\n%prefix%voice_ban @user",
+    "fields": {
+      "Przyklady": "%prefix%voice_ban 1234567890\n%prefix%voice_ban @glupek",
+      "Info": "Mozna dac wiecej niz jedno id i jednego @ - mozna je mieszac"
+    }
+  },
+
+  "voice_unban": {
+    "protection": "ADMIN",
+    "brief": "-",
+    "description": "daje unbana dla voica (skladania taka sama jak w voice_ban",
+    "fields": {}
+  },
+
+  "see_voice_bans": {
+    "protection": "ADMIN",
+    "brief": "-",
+    "description": "-",
+    "fields": {}
+  },
+
   "show_table": {
     "protection": "DEV",
     "brief": "-",
