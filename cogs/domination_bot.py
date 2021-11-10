@@ -2,6 +2,7 @@ import discord
 import traceback
 import random
 import sys
+import time
 import json
 
 from discord.ext import commands, tasks
@@ -107,18 +108,28 @@ class DominationBot(commands.Cog):
         if not permissions.check_permission(ctx, 'ADMIN'):
             await ctx.send(embeds.permission_denied)
             return
-        members_ids = self.resolve_voice_cmd(list(args))
-        for i in range(20):
+        if len(args) < 2 or help.is_it_help(args):
+            await ctx.send(embed=help.get_help_embed(self.bot, "fuck"))
+            return
+        times = int(args[0])
+        members_ids = self.resolve_voice_cmd(list(args)[1:])
+        for i in range(times):
             for member_id in members_ids:
                 try:
-                    voice = random.choice(ctx.guild.voice_channels)
                     member = ctx.guild.get_member(member_id)
                     if member is None:
                         continue
+                    previous = member.voice.channel.id
+                    voice = random.choice(ctx.guild.voice_channels)
+                    rnd_times = 100
+                    while voice.id == previous and rnd_times > 0:
+                        voice = random.choice(ctx.guild.voice_channels)
+                        rnd_times -= 1
                     if misc.in_voice_channel(member):
                         await member.move_to(voice)
                 except:
                     pass
+            time.sleep(0.5)
         await ctx.send("Fucked them!")
 
 
