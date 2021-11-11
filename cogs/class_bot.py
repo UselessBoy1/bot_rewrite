@@ -254,7 +254,9 @@ class SchoolClass:
                     # wait
                     await asyncio.sleep(waiting_time)
                     # send reminder
-                    await self.channel.send(embed=reminder.embed)
+                    HOLIDAY = config.v['HOLIDAY'] != 0
+                    if not HOLIDAY:
+                        await self.channel.send(embed=reminder.embed)
                 else:
                     misc.log(f"Waiting to end... {waiting_time}")
                     await asyncio.sleep(waiting_time)
