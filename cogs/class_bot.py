@@ -147,7 +147,9 @@ class SchoolClass:
                 if self.pending_reminder is not None:
 
                     # get time to first reminder in the sorted reminder list (in minutes)
-                    time_left = int(math.ceil((self.pending_reminder.r_time - misc.get_now().timestamp() + DEBUG_TIME_CHANGE) / 60))
+                    next_lesson_seconds = self.pending_reminder.r_time + config.v['SECONDS_BEFORE_LINK']
+                    time_left_seconds = next_lesson_seconds + DEBUG_TIME_CHANGE - misc.get_now().timestamp()
+                    time_left = int(math.ceil(time_left_seconds / 60))
 
                     if self.pending_reminder.embed is not None:
                         embed_with_link = self.pending_reminder.embed.copy()
@@ -233,10 +235,12 @@ class SchoolClass:
     @tasks.loop(hours=24)
     async def edit_msg(self):
         now = misc.get_now()
-        new_whole_hour = datetime.datetime(now.year, now.month, now.hour, 5).timestamp() - now.timestamp()
-        await asyncio.sleep(new_whole_hour)
+        next_edit_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, 55).timestamp() - now.timestamp()
+        if next_edit_time > 0:
+            await asyncio.sleep(next_edit_time)
         while True:
-            await self.edit_message.edit(self.get_link(None))
+            if self.edit_message is not None:
+                await self.edit_message.edit(embed=self.get_link(None))
             await asyncio.sleep(60)
 
     @tasks.loop(seconds=1)
