@@ -91,10 +91,13 @@ class DominationBot(commands.Cog):
         if help.is_it_help(args):
             await ctx.send(embed=help.get_help_embed(self.bot, "guard"))
             return
+        if misc.in_voice_channel(ctx.message.author):
+            self.channels_ids_to_guard.append(ctx.message.author.voice.channel.id)
+            await ctx.send(f"Stopped guarding! {ctx.message.author.voice.channel}")
         for arg in args:
             if int(arg) in self.channels_ids_to_guard:
                 self.channels_ids_to_guard.remove(int(arg))
-        await ctx.send("OK")
+                await ctx.send(f"Stopped guarding! id: {arg}")
 
 
     @commands.command("voice_unban")
