@@ -1,5 +1,4 @@
 import io
-
 import discord
 import asyncio
 import datetime
@@ -48,7 +47,6 @@ class EmailChecker:
                         f = discord.File(fp=io.BytesIO(attachment[1]))
                         f.filename = attachment[0].encode('UTF-8').decode('UTF-8')
                         await send_channel.send(file=f)
-
         except Exception as e:
             traceback.print_exception(type(e), e, e.__traceback__, file=sys.stderr)
 

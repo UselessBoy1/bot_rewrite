@@ -1,9 +1,6 @@
 import discord
-import traceback
 import random
-import sys
 import time
-import json
 
 from discord.ext import commands, tasks
 from tools import database, permissions, misc, lang, help, config, embeds, encryption
@@ -11,11 +8,15 @@ from tools import database, permissions, misc, lang, help, config, embeds, encry
 class DominationBot(commands.Cog):
     members_ids_banned_from_voice = []
     members_ids_to_fuck_with = []
+    channels_ids_to_guard = []
+
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    def resolve_voice_cmd(self, args: list) -> list[int]:
+
+    @classmethod
+    def resolve_voice_cmd(cls, args: list) -> list[int]:
         res = []
         for arg in args:
             str_arg = str(arg)
@@ -29,11 +30,15 @@ class DominationBot(commands.Cog):
                 res.append(None)
         return res
 
+
     @commands.Cog.listener("on_voice_state_update")
     async def on_voice_state_update(self, member, before, after):
         if before.channel is None and after.channel is not None:
             if member.id in self.members_ids_banned_from_voice:
                 await member.move_to(None)
+            if after.channel.id in self.channels_ids_to_guard:
+                await member.move_to(None)
+
 
     @commands.command("voice_ban")
     async def voice_ban_cmd(self,ctx, *args):
@@ -63,6 +68,35 @@ class DominationBot(commands.Cog):
         await ctx.send(embed=embed)
 
 
+    @commands.command("guard")
+    async def guard_cmd(self, ctx, *args):
+        if not permissions.check_permission(ctx, 'ADMIN'):
+            await ctx.send(embeds.permission_denied)
+            return
+        if help.is_it_help(args):
+            await ctx.send(embed=help.get_help_embed(self.bot, "guard"))
+            return
+        if misc.in_voice_channel(ctx.message.author):
+            self.channels_ids_to_guard.append(ctx.message.author.voice.channel.id)
+            await ctx.send(f"Guarding! {ctx.message.author.voice.channel}")
+        else:
+            await ctx.send(embed=embeds.not_in_voice_channel)
+
+
+    @commands.command("guard_leave")
+    async def guard_leave(self, ctx, *args):
+        if not permissions.check_permission(ctx, 'DEV'):
+            await ctx.send(embeds.permission_denied)
+            return
+        if help.is_it_help(args):
+            await ctx.send(embed=help.get_help_embed(self.bot, "guard"))
+            return
+        for arg in args:
+            if int(arg) in self.channels_ids_to_guard:
+                self.channels_ids_to_guard.remove(int(arg))
+        await ctx.send("OK")
+
+
     @commands.command("voice_unban")
     async def voice_unban_cmd(self,ctx, *args):
         if not permissions.check_permission(ctx, 'ADMIN'):
@@ -86,6 +120,7 @@ class DominationBot(commands.Cog):
             unbanned.append("No one :) Args were invalid")
         embed = discord.Embed(title="Voice unbanned", description=", ".join(unbanned), color=config.v['CONFIG_COLOR'])
         await ctx.send(embed=embed)
+
 
     @commands.command("see_voice_bans")
     async def see_voice_bans_cmd(self, ctx):
