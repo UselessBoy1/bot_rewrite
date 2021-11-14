@@ -66,10 +66,11 @@ function createElement(element)
 
 function load()
 {
-    
+
     site_json["site"].forEach(element => {
         article.appendChild(addParent(createElement(element), element.data));
     });
+    addMenuElement('Github', 'https://github.com/UselessBoy1/bot_rewrite')
 }
 
 load();

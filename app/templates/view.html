@@ -29,7 +29,10 @@
     <article onfocusin="hideMenu()">
         <div id="none"></div>
     </article>
-
+    <div id="github" onclick="window.open('https://github.com/UselessBoy1/bot_rewrite')">
+        <img src="{{ url_for('static', filename='GitHub-Mark-Light-32px.png') }}"/><br>
+        Github
+    </div>
     <script>
         var site_json = {{ site_json|safe }}
     </script>

@@ -4,7 +4,7 @@ function urlify(text)
     let t =  text.replace(urlRegex, (url) => 
     {
         let name = url;
-        if(navigator.userAgent.toLowerCase().match(/mobile/i))
+        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) 
         {
             name='link' 
         }
@@ -13,7 +13,8 @@ function urlify(text)
     return t;
 }
 
-function toast(msg) {
+function toast(msg) 
+{
     let toastDiv = document.querySelector('#toast');
     toastDiv.innerText = msg
     toastDiv.style.marginLeft = -toastDiv.clientWidth/2 + "px"

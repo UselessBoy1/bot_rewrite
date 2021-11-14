@@ -77,6 +77,28 @@ a
     color: #4f4;
 }
 
+#github
+{
+    position: fixed;
+    bottom: 1%;
+    right: 1%;
+    border-radius: 30%;
+    padding: 5px;
+}
+
+#github:hover
+{
+    background-color: #555;
+    cursor: pointer;
+}
+
+@media(orientation: portrait)
+{
+    #github
+    {
+        display: none;
+    }
+}
 
 /* The toast - position it at the bottom and in the middle of the screen */
 #toast {
