@@ -7,7 +7,7 @@ import sys
 import math
 import easyimap
 
-from tools import misc, lang, config, embeds, help, encryption, embeds
+from tools import misc, lang, config, help, encryption, embeds
 from discord.ext import commands, tasks
 
 LESSON_TIMES = config.LESSON_TIMES
@@ -15,6 +15,7 @@ LESSON_TIMES_ENDS = config.LESSON_TIMES_ENDS
 
 # should be 0
 DEBUG_TIME_CHANGE = -3600
+
 
 class Reminder:
     def __init__(self, r_time :int, embed, index=-1):
@@ -25,30 +26,30 @@ class Reminder:
     def __lt__(self, other):
         return self.r_time < other.r_time
 
+
 class EmailChecker:
 
     def __init__(self, host, email, password, ssl, port, allow_addr):
         self.allow_addr = allow_addr
         self.immaper = easyimap.connect(host, email, password, 'INBOX', ssl=ssl, port=port)
 
+
     async def check(self, send_channel :discord.TextChannel):
-        try:
-            unseen_emails = self.immaper.unseen(limit=10)
-            for mail in unseen_emails:
-                to_addr = mail.to
-                if self.allow_addr in to_addr:
-                    embed = discord.Embed(
-                        title=f'{mail.title} - {mail.from_addr}',
-                        description=f'{mail.body.encode("UTF-8").decode("UTF-8")}',
-                        color=config.v['EMAIL_COLOR']
-                    )
-                    await send_channel.send(embed=embed)
-                    for attachment in mail.attachments:
-                        f = discord.File(fp=io.BytesIO(attachment[1]))
-                        f.filename = attachment[0].encode('UTF-8').decode('UTF-8')
-                        await send_channel.send(file=f)
-        except Exception as e:
-            traceback.print_exception(type(e), e, e.__traceback__, file=sys.stderr)
+        unseen_emails = self.immaper.unseen(limit=10)
+        for mail in unseen_emails:
+            to_addr = mail.to
+            if self.allow_addr in to_addr:
+                embed = discord.Embed(
+                    title=f'{mail.title} - {mail.from_addr}',
+                    description=f'{mail.body.encode("UTF-8").decode("UTF-8")}',
+                    color=config.v['EMAIL_COLOR']
+                )
+                await send_channel.send(embed=embed)
+                for attachment in mail.attachments:
+                    f = discord.File(fp=io.BytesIO(attachment[1]))
+                    f.filename = attachment[0].encode('UTF-8').decode('UTF-8')
+                    await send_channel.send(file=f)
+
 
 class SchoolClass:
 
@@ -64,11 +65,12 @@ class SchoolClass:
     email_checker = None
     #endregion
 
+
     def __init__(self, bot :commands.Bot):
         self.bot = bot
 
-    #region FUNCS
 
+    #region FUNCS
     def run(self):
         self.channel = self.bot.get_channel(int(self.channel_id))
         if self.email_checker is not None:
@@ -77,8 +79,10 @@ class SchoolClass:
         self.rerun()
         self.edit_msg.start()
 
+
     def rerun(self):
         self.set_reminders()
+
 
     def set_reminders(self):
         LINK_COLOR = config.v['LINK_COLOR']
@@ -122,28 +126,28 @@ class SchoolClass:
                 self.reminders.append(r)
             #add reminder after last lesson ("czas do konca lekcji" -> czas do tego remindera)
             self.reminders.append(Reminder(r_time + 45*60, None, -1))
-        except Exception as e:
-            traceback.print_exception(type(e), e, e.__traceback__, file=sys.stderr)
-
+        except ValueError as ve:
+            traceback.print_exception(type(ve), ve, ve.__traceback__, file=sys.stderr)
     #endregion
 
-    #region SCHOOL CLASS FUNCS
 
-    def get_link(self, lesson=None):
+    #region SCHOOL CLASS FUNCS
+    def get_link(self, lesson=None) -> discord.Embed:
         """
         :param lesson: lesson name (optional)
         :return: returns embed with link for current lesson or lesson in lesson param
         """
         LINK_COLOR = config.v['LINK_COLOR']
         HOLIDAY = config.v['HOLIDAY'] != 0
+
         # get link for next lesson
         if lesson is None:
             if HOLIDAY:
                 embed_with_link = discord.Embed(title="WOLNE", color=LINK_COLOR)
+
             else:
                 # if there are some reminders left
                 if self.pending_reminder is not None:
-
                     # get time to first reminder in the sorted reminder list (in minutes)
                     next_lesson_seconds = self.pending_reminder.r_time + config.v['SECONDS_BEFORE_LINK']
                     time_left_seconds = next_lesson_seconds + DEBUG_TIME_CHANGE - misc.get_now().timestamp()
@@ -152,11 +156,14 @@ class SchoolClass:
                     if self.pending_reminder.embed is not None:
                         embed_with_link = self.pending_reminder.embed.copy()
                         embed_with_link.title = f"Czas do lekcji: {time_left} {lang.get_pl_word('minut', time_left)}"
+
                     else:
                         # if reminder.embed is none it means its last lesson
                         embed_with_link = discord.Embed(title=f"Czas do konca lekcji: {time_left} {lang.get_pl_word('minut', time_left)}", color=LINK_COLOR)
+
                 else:
                     embed_with_link = discord.Embed(title="WOLNE!", color=LINK_COLOR)
+
         else:
             #get specific link
             for link_key in self.links.keys():
@@ -167,7 +174,8 @@ class SchoolClass:
                 embed_with_link = discord.Embed(title=f"Nie ma lekcji {lesson}", color=LINK_COLOR)
         return embed_with_link
 
-    def get_plan(self):
+
+    def get_plan(self) -> discord.Embed:
         """
         :return: embed with plan for today
         """
@@ -206,10 +214,12 @@ class SchoolClass:
             time_start = str(LESSON_TIMES[i][0]).zfill(2) + ":" + str(LESSON_TIMES[i][1]).zfill(2)
             time_end = str(LESSON_TIMES_ENDS[i][0]).zfill(2) + ":" + str(LESSON_TIMES_ENDS[i][1]).zfill(2)
 
+            # add every lesson separated by /
+            name = " / ".join([x for x in lesson if x != "-"]).upper()
             # add :arrow: emojis only if now_index == i
-            embed.add_field(name=(":arrow_forward: " if now_index == i else "")
-                                 + " / ".join([x for x in lesson if x != "-"]).upper()
-                                 +(" :arrow_backward:" if now_index == i else ""),
+            if now_index == i:
+                name = ":arrow_forward: " + name + " :arrow_backward:"
+            embed.add_field(name=name,
                             value=f"{time_start} - {time_end}",
                             inline=False)
             added += 1
@@ -219,8 +229,8 @@ class SchoolClass:
             embed.description = "WOLNE"
 
         return embed
-
     #endregion
+
 
     async def set_new_day(self):
         #check edit message
@@ -228,8 +238,8 @@ class SchoolClass:
             embed = self.get_link()
             await self.edit_message.edit(embed=embed)
 
-    #region TASKS
 
+    #region TASKS
     @tasks.loop(hours=24)
     async def edit_msg(self):
         now = misc.get_now()
@@ -240,6 +250,7 @@ class SchoolClass:
             if self.edit_message is not None:
                 await self.edit_message.edit(embed=self.get_link(None))
             await asyncio.sleep(60)
+
 
     @tasks.loop(seconds=1)
     async def remind(self):
@@ -277,10 +288,10 @@ class SchoolClass:
             self.pending_reminder = None
             await asyncio.sleep(30)
 
+
     @tasks.loop(minutes=3)
     async def check_email(self):
         await self.email_checker.check(self.channel)
-
     #endregion
 
 
@@ -292,12 +303,12 @@ class LessonBot(commands.Cog):
         self.refresh.start()
 
     #region FUNCS
-
     def get_class_index_from_channel_id(self, channel_id):
         for i, sc in enumerate(self.school_classes):
             if channel_id == sc.channel_id:
                 return i
         return -1
+
 
     def get_class_index_from_name(self, name):
         name = name.lower()
@@ -306,11 +317,12 @@ class LessonBot(commands.Cog):
                 return i
         return -1
 
-    def resolve_link_cmd(self, ctx, args):
+
+    def resolve_link_cmd(self, ctx, args) -> tuple[int, str or None]:
         """
         :param ctx: ctx of link cmd
         :param args: args of link cmd
-        :return: (class index, lesson name)
+        :return: tuple (class index, lesson name)
         """
         """
         class index:
@@ -336,12 +348,12 @@ class LessonBot(commands.Cog):
             else:
                 return index_from_name, args[1] # if 'link <class name> <lesson name>' can identify class name
 
-    def resolve_plan_cmd(self, ctx, args):
+
+    def resolve_plan_cmd(self, ctx, args) -> int:
         """
         :param ctx: ctx of link cmd
         :param args: args of link cmd
         :return: class_index
-
         """
         """
         class_index:
@@ -364,17 +376,16 @@ class LessonBot(commands.Cog):
                     return index_from_channel # if 'plan <class name>' and cant find class name but can class channel
             return index_from_name  # if 'plan <class name>' and can find class name
 
+
     async def set_current_date(self):
         now = misc.get_now()
         date = f"📅Data: {str(now.day).zfill(2)}.{str(now.month).zfill(2)}.{now.year}"  # change channel name to current date
         channel = self.bot.get_channel(config.v['DATE_CHANNEL'])
         if channel is not None:
             await channel.edit(name=date)
-
     #endregion
 
     #region TASKS
-
     @tasks.loop(hours=24)
     async def refresh_next_day(self):
         # wait to whole minute
@@ -384,11 +395,12 @@ class LessonBot(commands.Cog):
         waiting_time = whole - now.timestamp()
         await asyncio.sleep(waiting_time)
         while True:
-            # call check_everything() function
+            # call set_new_day() function
             for sc in self.school_classes:
                 await sc.set_new_day()
 
             await asyncio.sleep(60)
+
 
     @tasks.loop(hours=24)
     async def refresh(self):
@@ -400,10 +412,10 @@ class LessonBot(commands.Cog):
         await self.set_current_date()
         for sc in self.school_classes: # reset school classes
             sc.rerun()
-
     #endregion
 
     #region EVENTS
+
     @commands.Cog.listener("on_ready")
     async def on_ready(self):
         self.refresh_next_day.start()
@@ -411,6 +423,7 @@ class LessonBot(commands.Cog):
             sc.run()
 
     #endregion
+
 
     #region CMD
     @commands.command(name="link")
@@ -429,12 +442,12 @@ class LessonBot(commands.Cog):
             await ctx.send(embed=embeds.school_class_cmd_on_different_channel)
 
         elif school_class_index == -2:
-            await ctx.send(
-                embed = discord.Embed(
-                    title = f"Nie ma klasy '{args[0]}'",
-                    color = LINK_COLOR
-                )
+            embed = discord.Embed(
+                title = f"Nie ma klasy '{args[0]}'",
+                color = LINK_COLOR
             )
+            await ctx.send(embed = embed)
+
         else:
             school_class = self.school_classes[school_class_index]
             embed = school_class.get_link(link)

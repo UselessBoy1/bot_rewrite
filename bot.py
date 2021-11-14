@@ -18,6 +18,7 @@ def get_cogs():
         if isfile(join("cogs", f)) and not f.startswith("_"):
             yield f.replace(".py", "")
 
+
 def load_cogs(bot):
     for cog in get_cogs():
         try:
@@ -44,15 +45,18 @@ async def run_bot_async(loop, q=None):
     bot = commands.Bot(command_prefix=CMD_PREFIXES, intents=discord.Intents.all(), help_command=None)
     DiscordComponents(bot)
 
+
     @bot.event
     async def on_ready():
         await bot.change_presence(activity=None, status=discord.Status.online)
         bot.shared_queue = q
         misc.log("READY")
 
+
     load_cogs(bot)
     token = os.environ["TOKEN"]
     await bot.start(token, bot=True, reconnect=True)
+
 
 def run_bot(loop, q=None):
     _loop = asyncio.new_event_loop()
@@ -60,6 +64,6 @@ def run_bot(loop, q=None):
     _loop.run_until_complete(run_bot_async(loop, q))
     _loop.close()
 
+
 if __name__ == "__main__":
     run_bot(asyncio.get_event_loop())
-
