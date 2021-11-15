@@ -243,7 +243,7 @@ class SchoolClass:
     @tasks.loop(hours=24)
     async def edit_msg(self):
         now = misc.get_now()
-        next_edit_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, 55).timestamp() - now.timestamp()
+        next_edit_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, 55).timestamp() + DEBUG_TIME_CHANGE - now.timestamp()
         if next_edit_time > 0:
             await asyncio.sleep(next_edit_time)
         while True:
