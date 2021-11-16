@@ -149,7 +149,7 @@ class DominationBot(commands.Cog):
         for i in range(times):
             for member_id in members_ids:
                 try:
-                    if member_id != permissions.dev:
+                    if member_id == permissions.dev:
                         continue
                     member = ctx.guild.get_member(member_id)
                     if member is None:
