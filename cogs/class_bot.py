@@ -185,6 +185,11 @@ class SchoolClass:
         today = now.weekday()
         embed = discord.Embed(title="PLAN", color=LINK_COLOR)
         added = 0
+        if self.pending_reminder is None:
+            today += 1
+        if today > 4:
+            today = 0
+
 
         now_index = -1
 
@@ -249,7 +254,10 @@ class SchoolClass:
             await asyncio.sleep(next_edit_time)
         while True:
             if self.edit_message is not None:
-                await self.edit_message.edit(embed=self.get_link(None))
+                try:
+                    await self.edit_message.edit(embed=self.get_link(None))
+                except discord.NotFound:
+                    pass
             await asyncio.sleep(60)
 
 
