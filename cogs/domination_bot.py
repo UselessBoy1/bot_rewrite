@@ -148,22 +148,19 @@ class DominationBot(commands.Cog):
         members_ids = self.resolve_voice_cmd(list(args)[1:])
         for i in range(times):
             for member_id in members_ids:
-                try:
-                    if member_id == permissions.dev:
-                        continue
-                    member = ctx.guild.get_member(member_id)
-                    if member is None:
-                        continue
-                    previous = member.voice.channel.id
+                if member_id == permissions.dev:
+                    continue
+                member = ctx.guild.get_member(member_id)
+                if member is None:
+                    continue
+                previous = member.voice.channel.id
+                voice = random.choice(ctx.guild.voice_channels)
+                rnd_times = 100
+                while voice.id == previous and rnd_times > 0:
                     voice = random.choice(ctx.guild.voice_channels)
-                    rnd_times = 100
-                    while voice.id == previous and rnd_times > 0:
-                        voice = random.choice(ctx.guild.voice_channels)
-                        rnd_times -= 1
-                    if misc.in_voice_channel(member):
-                        await member.move_to(voice)
-                except:
-                    pass
+                    rnd_times -= 1
+                if misc.in_voice_channel(member):
+                    await member.move_to(voice)
             time.sleep(0.5)
         await ctx.send("Fucked them!")
     #endregion
