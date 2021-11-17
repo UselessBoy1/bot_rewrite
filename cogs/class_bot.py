@@ -59,6 +59,7 @@ class SchoolClass:
     plan = []
     links = {}
     channel_id = 0
+    server_id = 0
     channel = None
     pending_reminder = None
     edit_message = None
@@ -303,9 +304,9 @@ class LessonBot(commands.Cog):
         self.refresh.start()
 
     #region FUNCS
-    def get_class_index_from_channel_id(self, channel_id):
+    def get_class_index_from_channel_id(self, server_id):
         for i, sc in enumerate(self.school_classes):
-            if channel_id == sc.channel_id:
+            if server_id == sc.server_id:
                 return i
         return -1
 
@@ -329,8 +330,8 @@ class LessonBot(commands.Cog):
          -1 if cmd in non school class channel;
          -2 if can't identify class name
         """
-        channel_id = ctx.message.channel.id
-        index_from_channel = self.get_class_index_from_channel_id(channel_id)
+        server_id = ctx.guild.id
+        index_from_channel = self.get_class_index_from_channel_id(server_id)
         if len(args) == 0:
             if index_from_channel == -1:
                 return -1, None # if only 'link' and can't find class channel
@@ -360,8 +361,8 @@ class LessonBot(commands.Cog):
          -1 if cmd on non class channel;
          -2 if can't identify class name
         """
-        channel_id = ctx.message.channel.id
-        index_from_channel = self.get_class_index_from_channel_id(channel_id)
+        server_id = ctx.guild.id
+        index_from_channel = self.get_class_index_from_channel_id(server_id)
         if len(args) == 0:
             if index_from_channel == -1:
                 return -1 # if only 'plan' and cant find channel
@@ -376,13 +377,6 @@ class LessonBot(commands.Cog):
                     return index_from_channel # if 'plan <class name>' and cant find class name but can class channel
             return index_from_name  # if 'plan <class name>' and can find class name
 
-
-    async def set_current_date(self):
-        now = misc.get_now()
-        date = f"📅Data: {str(now.day).zfill(2)}.{str(now.month).zfill(2)}.{now.year}"  # change channel name to current date
-        channel = self.bot.get_channel(config.v['DATE_CHANNEL'])
-        if channel is not None:
-            await channel.edit(name=date)
     #endregion
 
     #region TASKS
@@ -406,10 +400,8 @@ class LessonBot(commands.Cog):
     async def refresh(self):
         await self.bot.wait_until_ready()
         now = misc.get_now()
-        await self.set_current_date()
         midnight = int(86400 - (now.hour * 3600 + now.minute * 60 + now.second)) #seconds to midnight
         await asyncio.sleep(midnight)
-        await self.set_current_date()
         for sc in self.school_classes: # reset school classes
             sc.rerun()
     #endregion
@@ -489,7 +481,7 @@ def load_school_classes(bot):
     school_classes = []
     for school_class, data in misc.get_every_school_class_json():
         # check if file is correct
-        missing = misc.check_dict(['plan', 'links', 'channel_id'], data)
+        missing = misc.check_dict(['plan', 'links', 'channel_id', 'server_id'], data)
         if len(missing) > 0:
             misc.log(f"Bad JSON '{school_class}.json'! {len(missing)} missing values: {', '.join(missing)}")
             continue
@@ -499,6 +491,7 @@ def load_school_classes(bot):
         sc.plan = data['plan']
         sc.links = data['links']
         sc.channel_id = data['channel_id']
+        sc.server_id = data['server_id']
         if 'email' in data.keys():
             host = encryption.decrypt(data['email']['host'].encode("ASCII"))
             email = encryption.decrypt(data['email']['mail'].encode("ASCII"))
