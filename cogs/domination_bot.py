@@ -1,3 +1,5 @@
+import typing
+
 import discord
 import random
 import time
@@ -75,7 +77,7 @@ class DominationBot(commands.Cog):
 
     @commands.command("fuck")
     @commands.check(permissions.is_admin)
-    async def fuck_cmd(self, ctx, times: commands.Greedy[int], members: commands.Greedy[discord.Member], flags=""):
+    async def fuck_cmd(self, ctx, times: typing.Optional[int], members: commands.Greedy[discord.Member], flags=""):
         flags = [f.removeprefix('-') for f in flags.split(" ")]
         if help.is_it_help(flags):
             await ctx.send(embed=help.get_help_embed(self.bot, "fuck"))

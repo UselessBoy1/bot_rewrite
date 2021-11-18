@@ -180,7 +180,7 @@ class CommandBot(commands.Cog):
         if isinstance(error, commands.errors.CheckFailure):
             await ctx.send(embed=embeds.permission_denied)
         elif isinstance(error, commands.errors.CommandNotFound):
-            await ctx.send(embed=embeds.err(reason=f"Nie ma komendy '{ctx.command}'"))
+            pass
         else:
             await ctx.send(f"```\n{traceback.format_exception(type(error), error, error.__traceback__)}\n```")
 
