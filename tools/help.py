@@ -31,6 +31,6 @@ def get_help_embed(bot :Bot, cmd):
 
 def is_it_help(args):
     if len(args) == 1:
-        if args[0] == "help":
+        if args[0] == "help" or args[0] == '-help':
             return True
     return False

@@ -101,10 +101,8 @@ class RedditBot(commands.Cog):
         await self.send_meme(ctx)
 
     @commands.command(name="add_reddit")
+    @commands.check(permissions.is_admin)
     async def add_reddit_cmd(self,ctx, *args):
-        if not permissions.check_permission(ctx, "ADMIN"):
-            await ctx.send(embed=embeds.permission_denied)
-            return
         if help.is_it_help(args):
             await ctx.send(embed=help.get_help_embed(self.bot, "add_reddit"))
             return
@@ -117,11 +115,8 @@ class RedditBot(commands.Cog):
             await ctx.send(embed=embeds.err("reddit", "Nie podales nazwy subreddita!"))
 
     @commands.command(name="del_reddit")
+    @commands.check(permissions.is_admin)
     async def del_reddit_cmd(self, ctx, *args):
-        if not permissions.check_permission(ctx, "ADMIN"):
-            await ctx.send(embed=embeds.permission_denied)
-            return
-
         if help.is_it_help(args):
             await ctx.send(embed=help.get_help_embed(self.bot, "del_reddit"))
             return
@@ -134,11 +129,8 @@ class RedditBot(commands.Cog):
             await ctx.send(embed=embeds.err("reddit", "Nie podales nazwy subreddita!"))
 
     @commands.command(name="show_reddit")
+    @commands.check(permissions.is_admin)
     async def show_reddit_cmd(self, ctx, *args):
-        if not permissions.check_permission(ctx, "ADMIN"):
-            await ctx.send(embed=embeds.permission_denied)
-            return
-
         if help.is_it_help(args):
             await ctx.send(embed=help.get_help_embed(self.bot, "show_reddit"))
             return

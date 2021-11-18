@@ -175,6 +175,16 @@ class CommandBot(commands.Cog):
             traceback.print_exception(type(e), e, e.__traceback__, file=sys.stderr)
             await interaction.send(embed=embeds.err(reason="Something went wrong!"))
 
+    @commands.Cog.listener("on_command_error")
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, commands.errors.CheckFailure):
+            await ctx.send(embed=embeds.permission_denied)
+        elif isinstance(error, commands.errors.CommandNotFound):
+            await ctx.send(embed=embeds.err(reason=f"Nie ma komendy '{ctx.command}'"))
+        else:
+            await ctx.send(f"```\n{traceback.format_exception(type(error), error, error.__traceback__)}\n```")
+
+
     @commands.Cog.listener("on_message")
     async def on_message(self, message :discord.Message):
         if message.author.bot:

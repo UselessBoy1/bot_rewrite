@@ -97,6 +97,5 @@ def in_voice_channel(member :discord.Member):
             return True
     return False
 
-
 def log(msg):
     print(f"BOT:", msg)

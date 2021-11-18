@@ -11,11 +11,8 @@ class DatabaseBot(commands.Cog):
 
 
     @commands.command(name="sql")
+    @commands.check(permissions.is_dev)
     async def sql_cmd(self, ctx, *args):
-        if not permissions.check_permission(ctx, "ADMIN"):
-            await ctx.send(embed=embeds.permission_denied)
-            return
-
         if help.is_it_help(args):
             await ctx.send(embed=help.get_help_embed(self.bot, "sql"))
             return
@@ -35,11 +32,8 @@ class DatabaseBot(commands.Cog):
         await ctx.send(text)
 
     @commands.command(name="show_table")
+    @commands.check(permissions.is_dev)
     async def show_table_cmd(self, ctx, *args):
-        if not permissions.check_permission(ctx, "DEV"):
-            await ctx.send(embed=embeds.permission_denied)
-            return
-
         if help.is_it_help(args):
             await ctx.send(embed=help.get_help_embed(self.bot, "show_table"))
             return
@@ -61,11 +55,8 @@ class DatabaseBot(commands.Cog):
             await ctx.send(embed=embeds.err(reason="No <table name>"))
 
     @commands.command(name="config")
+    @commands.check(permissions.is_dev)
     async def config_cmd(self, ctx, *args):
-        if not permissions.check_permission(ctx, "ADMIN"):
-            await ctx.send(embed=embeds.permission_denied)
-            return
-
         if help.is_it_help(args):
             await ctx.send(embed=help.get_help_embed(self.bot, "config"))
             return

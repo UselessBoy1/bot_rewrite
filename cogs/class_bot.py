@@ -7,6 +7,7 @@ import sys
 import math
 import easyimap
 
+from typing import Union
 from tools import misc, lang, config, help, encryption, embeds
 from discord.ext import commands, tasks
 
@@ -18,13 +19,13 @@ DEBUG_TIME_CHANGE = -3600
 
 
 class Reminder:
-    def __init__(self, r_time :int, embed, index=-1):
-        self.r_time = r_time
+    def __init__(self, lesson_time: int, embed: Union[None, discord.Embed], index=-1):
+        self.lesson_time = lesson_time
         self.embed = embed
         self.index = index
 
     def __lt__(self, other):
-        return self.r_time < other.r_time
+        return self.lesson_time < other.lesson_time
 
 
 class EmailChecker:
@@ -91,7 +92,7 @@ class SchoolClass:
         try:
             now = misc.get_now()
             today = now.weekday()
-            r_time = misc.get_now().timestamp()
+            lesson_time = misc.get_now().timestamp()
             # for every lessons set in plan (eg. ["ANG, "INF])
             if HOLIDAY:
                 return
@@ -101,16 +102,14 @@ class SchoolClass:
                 if len(lessons) == 1 and lessons[0] == "-":
                     continue
 
-                # time to reminder
-                r_time = datetime.datetime(
+                # time to lesson
+                lesson_time = datetime.datetime(
                     year=now.year,
                     month=now.month,
                     day=now.day,
                     hour=LESSON_TIMES[i][0],
                     minute=LESSON_TIMES[i][1]
                 ).timestamp()
-
-                r_time -= config.v['SECONDS_BEFORE_LINK']
 
                 embed = discord.Embed(title="LINKS", color=LINK_COLOR)
 
@@ -123,10 +122,10 @@ class SchoolClass:
                         )
                     else:
                         raise ValueError(f"Lesson '{lesson}' doesn't exist! Bad JSON {self.name.upper()}.json")
-                r = Reminder(int(r_time), embed, i)
+                r = Reminder(int(lesson_time), embed, i)
                 self.reminders.append(r)
             #add reminder after last lesson ("czas do konca lekcji" -> czas do tego remindera)
-            self.reminders.append(Reminder(r_time + 45*60, None, -1))
+            self.reminders.append(Reminder(lesson_time + 45*60, None, -1))
         except ValueError as ve:
             traceback.print_exception(type(ve), ve, ve.__traceback__, file=sys.stderr)
     #endregion
@@ -150,7 +149,7 @@ class SchoolClass:
                 # if there are some reminders left
                 if self.pending_reminder is not None:
                     # get time to first reminder in the sorted reminder list (in minutes)
-                    next_lesson_seconds = self.pending_reminder.r_time + config.v['SECONDS_BEFORE_LINK']
+                    next_lesson_seconds = self.pending_reminder.lesson_time
                     time_left_seconds = next_lesson_seconds + DEBUG_TIME_CHANGE - misc.get_now().timestamp()
                     time_left = int(math.ceil(time_left_seconds / 60))
 
@@ -267,7 +266,7 @@ class SchoolClass:
         if len(self.reminders) > 0:
             reminder = self.reminders[0]
             #get time to next reminder
-            waiting_time = reminder.r_time - misc.get_now().timestamp() + DEBUG_TIME_CHANGE
+            waiting_time = reminder.lesson_time - misc.get_now().timestamp() + DEBUG_TIME_CHANGE - config.v['SECONDS_BEFORE_LINK']
             if waiting_time > 0:
                 self.pending_reminder = reminder
                 if reminder.embed is not None:

@@ -1,4 +1,5 @@
 import discord
+from discord.ext import commands
 
 from collections import OrderedDict
 
@@ -70,3 +71,11 @@ def check_permission(ctx, permission):
     author = ctx.message.author
     return get_member_permission_lvl(author) >= get_permission_lvl(permission)
 
+def is_admin(ctx: commands.Context):
+    return ctx.message.author.guild_permissions.administrator
+
+def is_dev(ctx :commands.Context):
+    return ctx.message.author.id == dev
+
+def return_false(*args, **kwargs):
+    return False
