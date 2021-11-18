@@ -9,8 +9,8 @@ from discord.ext import commands
 from os.path import isfile, join
 from tools import database, misc, config
 
-CMD_PREFIXES = ["t?", "T?"]
-# CMD_PREFIXES = ["c?", "C?", '?']
+# CMD_PREFIXES = ["t?", "T?"]
+CMD_PREFIXES = ['?', "c?", "C?"]
 
 
 def get_cogs():
