@@ -115,7 +115,7 @@
   "fuck": {
     "protection": "ADMIN",
     "brief": "-",
-    "description": "%prefix% <num> <user list>",
+    "description": "%prefix%fuck <num> <user list>",
     "fields": {
       "info": "user list jak w voice_ban"
     }
