@@ -3,14 +3,17 @@ import os
 import traceback
 import sys
 import asyncio
+import platform
 
 from discord_components.client import DiscordComponents
 from discord.ext import commands
 from os.path import isfile, join
 from tools import database, misc, config
 
-# CMD_PREFIXES = ["t?", "T?"]
-CMD_PREFIXES = ['?', "c?", "C?"]
+if platform.system() == "Windows":
+    CMD_PREFIXES = ["t?", "T?"]
+else:
+    CMD_PREFIXES = ['?', "c?", "C?"]
 
 
 def get_cogs():
