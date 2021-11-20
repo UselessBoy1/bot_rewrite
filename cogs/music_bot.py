@@ -27,10 +27,11 @@ class SearchResult:
         self.author = author
 
 class Song:
-    def __init__(self, title, author, vformat):
+    def __init__(self, title, author, vformat, vid):
         self.title = title
         self.author = author
         self.vformat = vformat
+        self.vid = vid
 
 class MusicBot(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -63,7 +64,7 @@ class MusicBot(commands.Cog):
             video = self.song_queue.popleft()
             embed = discord.Embed(
                 title=f"Now playing",
-                description=f"{video.title}",
+                description=f"[{video.title}](https://youtu.be/{video.vid})",
                 color=config.v['MUSIC_COLOR']
             )
             self.to_send = embed
@@ -106,12 +107,12 @@ class MusicBot(commands.Cog):
             self.song_queue.clear()
             await asyncio.sleep(0.1)
         self.text_channel = ctx.channel
-        self.song_queue.append(Song(search_results.title, search_results.author, vid_format))
+        self.song_queue.append(Song(search_results.title, search_results.author, vid_format, search_results.vid))
         await search_msg.delete()
         if self.playing:
             embed = discord.Embed(
                 title=f"Added to queue",
-                description=f"{search_results.title}",
+                description=f"[{search_results.title}](https://youtu.be/{search_results.vid})",
                 color=config.v['MUSIC_COLOR']
             )
             await ctx.send(embed=embed)
@@ -122,7 +123,7 @@ class MusicBot(commands.Cog):
     async def queue_cmd(self, ctx: commands.Context):
         embed = discord.Embed(title="Queue", color=config.v['MUSIC_COLOR'])
         for song in self.song_queue:
-            embed.add_field(name=f"{song.title}", value=f"{song.author}", inline=False)
+            embed.add_field(name=f"[{song.title}](https://youtu.be/{song.vid})", value=f"{song.author}", inline=False)
         if len(self.song_queue) == 0:
             embed.title = "Queue - Empty"
         await ctx.send(embed=embed)
