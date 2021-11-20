@@ -71,7 +71,6 @@ class MusicBot(commands.Cog):
                 self.song_queue.append(video)
             self.voice.play(
                 discord.FFmpegPCMAudio(
-                    executable="ffmpeg.exe",
                     source=video.vformat['url'],
                     before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"
                 ),
