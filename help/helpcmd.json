@@ -40,6 +40,57 @@
     }
   },
 
+  "play": {
+    "protection": "N",
+    "brief": "dodaje filmik do kolejki do grania",
+    "description": "dodaje filmik do kolejki",
+    "fields": {
+      "Przyklad": "%prefix%play Styrta sie plali"
+    }
+  },
+
+  "queue": {
+    "protection": "N",
+    "brief": "Wyswietla kolejke do grania",
+    "description": "Wyswietla kolejke do grania",
+    "fields":{}
+  },
+
+  "skip": {
+    "protection": "N",
+    "brief": "Przechodzi do nastepnego",
+    "description": "Przechodzi do nastepnego",
+    "fields":{}
+  },
+
+  "pause": {
+    "protection": "N",
+    "brief": "Pause",
+    "description": "Pause",
+    "fields":{}
+  },
+
+  "resume": {
+    "protection": "N",
+    "brief": "Resume",
+    "description": "Resume",
+    "fields":{}
+  },
+
+  "loop": {
+    "protection": "N",
+    "brief": "Wlacza/Wylacza petle na muzyka ktora jest/bedzie w kolejce",
+    "description": "Wlacza/Wylacza petle na muzyka ktora jest/bedzie w kolejce",
+    "fields":{}
+  },
+
+  "stop": {
+    "protection": "N",
+    "brief": "Zatrzymuje muzyke",
+    "description": "Zatrzymuje muzyke i czysci kolejke",
+    "fields":{}
+  },
+
   "sql": {
     "protection": "DEV",
     "brief": "-",

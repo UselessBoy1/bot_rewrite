@@ -5,7 +5,7 @@ permission_denied = discord.Embed(title="Nie masz uprawnien!", color=config.v["C
 
 command_not_found = discord.Embed(title="Nie ma takiej komendy!", color=config.v['CONFIG_COLOR'])
 
-not_in_voice_channel = discord.Embed(title="Musisz byc na kanale glosowym!", color=config.v["CONFIG_COLOR"])
+not_in_voice_channel = discord.Embed(title="Musisz byc na kanale glosowym!", color=config.v['MUSIC_COLOR'])
 
 channel_not_mentioned = discord.Embed(title="Musisz oznaczyc kanal <#ID>", color=config.v["CONFIG_COLOR"])
 

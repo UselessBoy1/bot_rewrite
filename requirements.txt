@@ -7,3 +7,4 @@ langid
 cryptography
 flask
 easyimap
+pynacl
