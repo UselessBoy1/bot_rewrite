@@ -51,7 +51,7 @@ async def run_bot_async(loop, q=None):
 
     @bot.event
     async def on_ready():
-        await bot.change_presence(activity=discord.Game('https://custom-bot-609.herokuapp.com/'), status=discord.Status.online)
+        await bot.change_presence(activity=discord.Game('https://ika-infa.herokuapp.com/'), status=discord.Status.online)
         bot.shared_queue = q
         misc.log("READY")
 
