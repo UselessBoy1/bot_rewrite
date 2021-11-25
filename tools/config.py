@@ -15,13 +15,16 @@ def check_database():
 
 
 v = {
-    'HELP_COLOR': 0x2ecc71,
+    'HELP_COLOR': 0x3498db,
     'LINK_COLOR': 0x9b59b6,
     'EMAIL_COLOR': 0x9b59b6,
     'HOMEWORK_COLOR': 0xf1c40f,
-    'REDDIT_COLOR': 0xe74c3c,
+    'REDDIT_COLOR': 0xff4301,
     'CONFIG_COLOR': 0x3498db,
-    'MUSIC_COLOR': 0xf1c40f,
+    'MUSIC_COLOR': 0x2ecc71,
+    'SEARCH_COLOR': 0xf1c40f,
+    'SUCCESS_COLOR': 0x2ecc71,
+    'FAIL_COLOR': 0xe74c3c,
     'DATE_CHANNEL': 740525989788123218,
     'SECONDS_BEFORE_LINK': 100,
     'HOLIDAY': 0

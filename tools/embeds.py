@@ -1,13 +1,13 @@
 import discord
 from tools import config, misc
 
-permission_denied = discord.Embed(title="Nie masz uprawnien!", color=config.v["CONFIG_COLOR"])
+permission_denied = discord.Embed(title="Nie masz uprawnien!", color=config.v["FAIL_COLOR"])
 
-command_not_found = discord.Embed(title="Nie ma takiej komendy!", color=config.v['CONFIG_COLOR'])
+command_not_found = discord.Embed(title="Nie ma takiej komendy!", color=config.v['FAIL_COLOR'])
 
-not_in_voice_channel = discord.Embed(title="Musisz byc na kanale glosowym!", color=config.v['MUSIC_COLOR'])
+not_in_voice_channel = discord.Embed(title="Musisz byc na kanale glosowym!", color=config.v['FAIL_COLOR'])
 
-channel_not_mentioned = discord.Embed(title="Musisz oznaczyc kanal <#ID>", color=config.v["CONFIG_COLOR"])
+channel_not_mentioned = discord.Embed(title="Musisz oznaczyc kanal <#ID>", color=config.v["FAIL_COLOR"])
 
 school_class_cmd_on_different_channel = discord.Embed(title="Komenda klasy na kanale innym niz klasowy!", color=config.v['LINK_COLOR'])
 

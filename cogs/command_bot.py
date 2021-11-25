@@ -30,11 +30,8 @@ class CommandBot(commands.Cog):
                         await message.author.move_to(mentioned.voice.channel)
 
     @commands.command(name="exec")
+    @commands.check(permissions.is_dev)
     async def exec_cmd(self, ctx, *args):
-        if not permissions.check_permission(ctx, "ADMIN"):
-            await ctx.send(embed=embeds.permission_denied)
-            return
-
         if help.is_it_help(args):
             await ctx.send(embed=help.get_help_embed(self.bot, "exec"))
             return
@@ -48,11 +45,8 @@ class CommandBot(commands.Cog):
             await ctx.send(f"Err {e}")
 
     @commands.command(name="move")
+    @commands.check(permissions.is_admin)
     async def move_cmd(self, ctx :commands.Context, *args):
-        if not permissions.check_permission(ctx, "STRAZNIK"):
-            await ctx.send(embed=embeds.permission_denied)
-            return
-
         if help.is_it_help(args):
             await ctx.send(embed=help.get_help_embed(self.bot, "move"))
             return
@@ -68,43 +62,21 @@ class CommandBot(commands.Cog):
 
         channel = ch_mentions[0]
         if type(channel) != discord.VoiceChannel:
-            await ctx.send(embed=discord.Embed(title="ERR"))
+            embed = discord.Embed(
+                title=f"<#{channel.id}> is not voice channel!",
+                color=config.v['FAIL_COLOR']
+            )
+            await ctx.send(embed=embed)
             return
 
         for member in ctx.author.voice.channel.members:
             await member.move_to(channel)
-        misc.log(f"Moved {', '.join(member.name for member in ctx.author.voice.channel.members)} to channel '{channel.name}' [{channel.id}]")
-
-    @commands.command(name="dhelp")
-    async def dhelp_cmd(self, ctx, *args):
-        if len(args) > 0:
-            if not permissions.check_permission(ctx, args[0]):
-                await ctx.send(embed=embeds.permission_denied)
-                return
-
-            if help.is_it_help(args):
-                await ctx.send(embed=help.get_help_embed(self.bot, "dhelp"))
-                return
-
-            lvl = permissions.get_permission_lvl(args[0])
-            embed = discord.Embed(title="HELP", color=config.v['HELP_COLOR'])
-            with open("help/helpcmd.json") as f:
-                data = json.load(f)
-            for cmd in self.bot.commands:
-                missing = misc.check_dict([cmd.name], data)
-                if len(missing) > 0:
-                    misc.log(f"Missing command in help! {cmd}!")
-            for cmd in data.keys():
-                missing = misc.check_dict(["protection", "brief"], data[cmd])
-                if len(missing) > 0:
-                    misc.log(f"Missing values: {', '.join(missing)} for {cmd}")
-                    continue
-                if lvl >= permissions.get_permission_lvl(data[cmd]['protection']):
-                    prefix = self.bot.command_prefix[0]
-                    embed.add_field(name=prefix + cmd, value=data[cmd]["brief"].replace("%prefix%", prefix), inline=False)
-            await ctx.send(embed=embed)
-        else:
-            await ctx.send(embed=embeds.err())
+        embed = discord.Embed(
+            title=f"Moved to <#{channel.id}>",
+            description=', '.join(member.name for member in ctx.author.voice.channel.members),
+            color=config.v['SUCCESS_COLOR']
+        )
+        await ctx.send(embed=embed)
 
     @commands.command(name="help")
     async def help_cmd(self, ctx, *args):
@@ -128,20 +100,6 @@ class CommandBot(commands.Cog):
         else:
             embed = help.get_help_embed(self.bot, str(args[0]))
         await ctx.send(embed=embed)
-
-    @commands.command(name="admin")
-    async def give_admin(self, ctx, *args):
-        if not permissions.check_permission(ctx, 'ADMIN'):
-            await ctx.send(embeds.permission_denied)
-            return
-        if len(ctx.message.mentions) == 1:
-            mentioned = ctx.message.mentions[0]
-            role_id = permissions.permissions_roles["PRZEWODNICZACY"]
-            if not permissions.has_role(role_id, mentioned):
-                role = ctx.guild.get_role(role_id)
-                await mentioned.add_roles(role)
-        else:
-            await ctx.send(embeds.err("CONFIG_COLOR", "No member mentioned!"))
 
     @commands.command(name="detect")
     async def detect_cmd(self, ctx, *args):

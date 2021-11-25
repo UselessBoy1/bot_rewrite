@@ -107,14 +107,14 @@ class MusicBot(commands.Cog):
             await ctx.send(embed=embeds.not_in_voice_channel)
             return
 
-        search_msg = await ctx.send(embed=discord.Embed(title="Searching...", color=config.v['MUSIC_COLOR']))
+        search_msg = await ctx.send(embed=discord.Embed(title="Searching...", color=config.v['SEARCH_COLOR']))
         title = '+'.join(org_title.split())
         search_results = self.search(title)
 
         if search_results is None:
             embed = discord.Embed(
                 title=f"Couldn't find '{org_title}'!",
-                color=config.v['MUSIC_COLOR']
+                color=config.v['FAIL_COLOR']
             )
             await ctx.send(embed=embed)
             await search_msg.delete()
