@@ -134,11 +134,17 @@ class CommandBot(commands.Cog):
             await interaction.send(embed=embeds.err(reason="Something went wrong!"))
 
     @commands.Cog.listener("on_command_error")
-    async def on_command_error(self, ctx, error):
+    async def on_command_error(self, ctx :commands.Context, error):
         if isinstance(error, commands.errors.CheckFailure):
             await ctx.send(embed=embeds.permission_denied)
         elif isinstance(error, commands.errors.CommandNotFound):
             pass
+        elif isinstance(error, commands.errors.MissingRequiredArgument):
+            cmd = str(ctx.command)
+            for prefix in self.bot.command_prefix:
+                cmd = cmd.removeprefix(prefix)
+            embed = help.get_help_embed(self.bot, cmd)
+            await ctx.send(embed=embed)
         else:
             nl = ''
             await ctx.send(f"```\n{nl.join(traceback.format_exception(type(error), error, error.__traceback__))}\n```")
