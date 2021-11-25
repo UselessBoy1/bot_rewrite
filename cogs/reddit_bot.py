@@ -7,7 +7,7 @@ import random
 from discord.ext import commands
 from tools import database, misc, permissions, config, embeds, help
 
-headers = {
+HEADERS = {
     'authority': 'www.reddit.com',
     'cache-control': 'max-age=0',
     'upgrade-insecure-requests': '1',
@@ -43,7 +43,7 @@ class RedditBot(commands.Cog):
         :param subreddit: only name of subreddit (without r/)
         :return: list of posts (dicts)
         """
-        response = requests.get(f'https://www.reddit.com/r/{subreddit}/new.json', headers=headers)
+        response = requests.get(f'https://www.reddit.com/r/{subreddit}/new.json', headers=HEADERS)
         return response.json()['data']['children']
 
     async def send_meme(self, ctx):

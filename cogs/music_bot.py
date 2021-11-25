@@ -7,8 +7,9 @@ from collections import deque
 from discord.ext import commands, tasks
 from tools import config, misc, embeds
 
+FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
 
-headers = {
+HEADERS = {
     'authority': 'invidious.snopyta.org',
     'cache-control': 'max-age=0',
     'upgrade-insecure-requests': '1',
@@ -36,25 +37,26 @@ class Song:
         self.vformat = vformat
         self.vid = vid
 
-
-class MusicBot(commands.Cog):
-
-    def __init__(self, bot: commands.Bot):
-        self.bot = bot
+class PlayerOptions:
+    def __init__(self):
         self.song_queue = deque()
         self.voice = None
         self.text_channel = None
-        self.to_send = None
-        self.send_msgs.start()
         self.playing = False
         self.paused = False
         self.loop = False
         self.now_playing = None
 
+class MusicBot(commands.Cog):
+
+    def __init__(self, bot: commands.Bot):
+        self.bot = bot
+        self.song_players = {}
+
 
     @classmethod
     def search(cls, title) -> typing.Optional[SearchResult]:
-        response = requests.get(f"https://invidious.snopyta.org/api/v1/search?q={title}&fields=type,title,videoId,author", headers=headers)
+        response = requests.get(f"https://invidious.snopyta.org/api/v1/search?q={title}&fields=type,title,videoId,author", headers=HEADERS)
         json = response.json()
         for film in json:
             if film['type'] == 'video':
@@ -64,38 +66,39 @@ class MusicBot(commands.Cog):
 
     @classmethod
     def get_format(cls, search_results: SearchResult) -> dict:
-        response = requests.get(f"https://invidious.snopyta.org/api/v1/videos/{search_results.vid}?fields=adaptiveFormats", headers=headers)
+        response = requests.get(f"https://invidious.snopyta.org/api/v1/videos/{search_results.vid}?fields=adaptiveFormats", headers=HEADERS)
         return response.json()['adaptiveFormats'][0]
 
 
-    def play_next(self):
-        if len(self.song_queue) != 0:
-            video = self.song_queue.popleft()
+    async def play_next(self, guild_id):
+        player = self.song_players[guild_id]
+        if len(player.song_queue) != 0:
+            video = player.song_queue.popleft()
             embed = discord.Embed(
                 title=f"Now playing",
                 description=f"[{video.title}](https://youtu.be/{video.vid})",
                 color=config.v['MUSIC_COLOR']
             )
 
-            self.to_send = embed
 
-            if self.loop:
-                self.song_queue.append(video)
+            await player.text_channel.send(embed=embed)
 
-            self.voice.play(
-                discord.FFmpegPCMAudio(
-                    source=video.vformat['url'],
-                    before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"
-                ),
-                after=lambda e: self.play_next()
+            if player.loop:
+                player.song_queue.append(video)
+
+            source = await discord.FFmpegOpusAudio.from_probe(video.vformat['url'], **FFMPEG_OPTIONS)
+
+            player.voice.play(
+                source,
+                after=lambda e: self.bot.dispatch("play_next", guild_id)
             )
 
-            self.playing = True
-            self.now_playing = video
+            player.playing = True
+            player.now_playing = video
         else:
-            self.playing = False
-            self.now_playing = None
-            self.voice.stop()
+            player.playing = False
+            player.now_playing = None
+            player.voice.stop()
 
 
     @commands.command(name="play")
@@ -118,17 +121,18 @@ class MusicBot(commands.Cog):
             return
 
         vid_format = self.get_format(search_results)
+        player = self.song_players[ctx.guild.id]
         if ctx.voice_client is None or ctx.author.voice.channel != ctx.voice_client.channel:
             await ctx.author.voice.channel.connect()
-            self.voice = ctx.guild.voice_client
-            self.song_queue.clear()
+            player.voice = ctx.guild.voice_client
+            player.song_queue.clear()
             await asyncio.sleep(0.1)
 
-        self.text_channel = ctx.channel
-        self.song_queue.append(Song(search_results.title, search_results.author, vid_format, search_results.vid))
+        player.text_channel = ctx.channel
+        player.song_queue.append(Song(search_results.title, search_results.author, vid_format, search_results.vid))
         await search_msg.delete()
 
-        if self.playing:
+        if player.playing:
             embed = discord.Embed(
                 title=f"Added to queue",
                 description=f"[{search_results.title}](https://youtu.be/{search_results.vid})",
@@ -136,24 +140,24 @@ class MusicBot(commands.Cog):
             )
             await ctx.send(embed=embed)
         else:
-            self.play_next()
+            await self.play_next(ctx.guild.id)
 
 
     @commands.command(name="queue")
     async def queue_cmd(self, ctx: commands.Context):
         embed = discord.Embed(title="Queue", color=config.v['MUSIC_COLOR'])
-
-        if self.playing:
-            link = f'[{self.now_playing}](https://youtu.be/{self.now_playing.vid})'
-            if self.paused:
+        player = self.song_players[ctx.guild.id]
+        if player.playing:
+            link = f'[{player.now_playing}](https://youtu.be/{player.now_playing.vid})'
+            if player.paused:
                 embed.description = f"Paused {link}"
             else:
                 embed.description = f"Playing {link}"
 
-        for song in self.song_queue:
+        for song in player.song_queue:
             embed.add_field(name=f"{song.title}", value=f"[{song.author}](https://youtu.be/{song.vid})", inline=False)
 
-        if len(self.song_queue) == 0:
+        if len(player.song_queue) == 0:
             embed.title = "Queue - Empty"
 
         await ctx.send(embed=embed)
@@ -161,51 +165,59 @@ class MusicBot(commands.Cog):
 
     @commands.command(name="skip")
     async def skip_cmd(self, ctx):
-        if self.playing:
-            self.voice.stop()
+        player = self.song_players[ctx.guild.id]
+        if player.playing:
+            player.voice.stop()
             await ctx.message.add_reaction("👌")
 
 
     @commands.command(name="pause")
-    async def pause_cmd_(self, ctx):
-        if self.playing and not self.paused:
-            self.voice.pause()
-            self.paused = True
+    async def pause_cmd(self, ctx):
+        player = self.song_players[ctx.guild.id]
+        if player.playing and not player.paused:
+            player.voice.pause()
+            player.paused = True
             await ctx.message.add_reaction('⏸')
 
 
     @commands.command(name="resume")
     async def resume_cmd(self, ctx):
-        if self.playing and self.paused:
-            self.voice.resume()
-            self.paused = False
+        player = self.song_players[ctx.guild.id]
+        if player.playing and player.paused:
+            player.voice.resume()
+            player.paused = False
             await ctx.message.add_reaction('▶')
 
 
     @commands.command(name="stop")
     async def stop_cmd(self, ctx: commands.Context):
-        if self.playing:
-            self.song_queue.clear()
-            self.voice.stop()
+        player = self.song_players[ctx.guild.id]
+        if player.playing:
+            player.song_queue.clear()
+            player.voice.stop()
             await ctx.message.add_reaction("❌")
 
 
     @commands.command(name="loop")
     async def loop_cmd(self, ctx):
-        if self.loop:
-            await ctx.send("Loop disabeled")
+        player = self.song_players[ctx.guild.id]
+        if player.loop:
+            await ctx.send("Loop disabled")
         else:
             await ctx.send("Looping queue")
-            if self.now_playing is not None:
-                self.song_queue.append(self.now_playing)
-        self.loop = not self.loop
+            if player.now_playing is not None:
+                player.song_queue.append(player.now_playing)
+        player.loop = not player.loop
 
+    @commands.Cog.listener("on_play_next")
+    async def on_play_next(self, guild_id):
+        await self.play_next(guild_id)
 
-    @tasks.loop(seconds=1)
-    async def send_msgs(self):
-        if self.to_send is not None:
-            await self.text_channel.send(embed=self.to_send)
-            self.to_send = None
+    @commands.Cog.listener("on_ready")
+    async def on_ready(self):
+        for guild in self.bot.guilds:
+            self.song_players[guild.id] = PlayerOptions()
+
 
 
 def setup(bot: commands.Bot):
