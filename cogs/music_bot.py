@@ -73,10 +73,10 @@ class MusicBot(commands.Cog):
     async def play_next(self, guild_id):
         player = self.song_players[guild_id]
         if len(player.song_queue) != 0:
-            video = player.song_queue.popleft()
+            song = player.song_queue.popleft()
             embed = discord.Embed(
                 title=f"Now playing",
-                description=f"[{video.title}](https://youtu.be/{video.vid})",
+                description=f"[{song.title}](https://youtu.be/{song.vid})",
                 color=config.v['MUSIC_COLOR']
             )
 
@@ -84,9 +84,9 @@ class MusicBot(commands.Cog):
             await player.text_channel.send(embed=embed)
 
             if player.loop:
-                player.song_queue.append(video)
+                player.song_queue.append(song)
 
-            source = await discord.FFmpegOpusAudio.from_probe(video.vformat['url'], **FFMPEG_OPTIONS)
+            source = await discord.FFmpegOpusAudio.from_probe(song.vformat['url'], **FFMPEG_OPTIONS)
 
             player.voice.play(
                 source,
@@ -94,7 +94,7 @@ class MusicBot(commands.Cog):
             )
 
             player.playing = True
-            player.now_playing = video
+            player.now_playing = song
         else:
             player.playing = False
             player.now_playing = None
@@ -148,7 +148,7 @@ class MusicBot(commands.Cog):
         embed = discord.Embed(title="Queue", color=config.v['MUSIC_COLOR'])
         player = self.song_players[ctx.guild.id]
         if player.playing:
-            link = f'[{player.now_playing}](https://youtu.be/{player.now_playing.vid})'
+            link = f'[{player.now_playing.title}](https://youtu.be/{player.now_playing.vid})'
             if player.paused:
                 embed.description = f"Paused {link}"
             else:
