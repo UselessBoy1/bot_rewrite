@@ -451,10 +451,11 @@ class LessonBot(commands.Cog):
             school_class = self.school_classes[school_class_index]
             embed = school_class.get_link(link)
             msg = await ctx.send(embed=embed)
-            if school_class.edit_message is not None and link is None:
-                await school_class.edit_message.delete()
-            school_class.edit_message = msg
 
+            if link is None:
+                if school_class.edit_message is not None:
+                    await school_class.edit_message.delete()
+                school_class.edit_message = msg
 
     @commands.command(name="plan")
     async def send_plan_cmd(self, ctx, *args):
