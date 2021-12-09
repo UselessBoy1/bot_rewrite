@@ -84,12 +84,17 @@ class DominationBot(commands.Cog):
         if self.bad_requests > 10:
             raise TooManyBadRequests
 
-        await money.take_money(ctx.guild, ctx.author, 1000, "Fuck command")
+        try:
+            await money.take_money(ctx.guild, ctx.author, 1000, "Fuck command")
+        except ConnectionError as ce:
+            await ctx.send(ce.strerror)
 
         flags = [f.removeprefix('-') for f in flags.split(" ")]
+
         if help.is_it_help(flags):
             await ctx.send(embed=help.get_help_embed(self.bot, "fuck"))
             return
+
         ignore_members = []#[permissions.dev]
         for i in range(times):
             for member in members:
