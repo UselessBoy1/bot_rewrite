@@ -139,6 +139,8 @@ class CommandBot(commands.Cog):
             await ctx.send(embed=embeds.permission_denied)
         elif isinstance(error, errors.TooManyBadRequests):
             await ctx.send(embed=embeds.too_many_bad_requests)
+        elif isinstance(error, errors.NotEnoughMoney):
+            await ctx.send(embed=embeds.not_enough_money)
         elif isinstance(error, commands.errors.CommandNotFound):
             pass
         elif isinstance(error, commands.errors.MissingRequiredArgument):
