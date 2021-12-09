@@ -11,5 +11,5 @@ async def take_money(guild :discord.Guild, user: discord.User, money: int, reaso
     if user_cash < money:
         raise NotEnoughMoney
 
-    await client.edit_balance(guild, user, cash=-money, reason=reason)
+    await client.edit_balance(guild, user, cash=-1)
 
