@@ -1,6 +1,7 @@
 import os
 import discord
 import typing
+import requests
 from unbelieva import Client
 from tools.errors import *
 
@@ -11,5 +12,5 @@ async def take_money(guild :discord.Guild, user: discord.User, money: int, reaso
     if user_cash < money:
         raise NotEnoughMoney
 
-    await client.edit_balance(guild, user, cash=-1)
+    await client.set_balance(guild, user, cash=user_cash-1000, reason=reason)
 
