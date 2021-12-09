@@ -157,7 +157,7 @@ class CommandBot(commands.Cog):
 
         else:
             nl = ''
-            await ctx.send(f"```\n{nl.join(traceback.format_exception(type(error), error, error.__traceback__))}\n```")
+            await ctx.send(f"```\n{nl.join(traceback.format_exception(type(error), error, error.__traceback__))[:1900]}\n```")
 
 
     @commands.Cog.listener("on_message")

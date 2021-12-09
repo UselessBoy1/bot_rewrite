@@ -88,6 +88,7 @@ class DominationBot(commands.Cog):
             await money.take_money(ctx.guild, ctx.author, 1000, "Fuck command")
         except ConnectionError as ce:
             await ctx.send(ce.strerror)
+            print(ce.strerror)
 
         flags = [f.removeprefix('-') for f in flags.split(" ")]
 
