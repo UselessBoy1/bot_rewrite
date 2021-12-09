@@ -79,7 +79,6 @@ class DominationBot(commands.Cog):
 
 
     @commands.command("fuck")
-    @commands.check(permissions.is_admin)
     async def fuck_cmd(self, ctx: commands.Context, times: typing.Optional[int], members: commands.Greedy[discord.Member], flags=""):
         if self.bad_requests > 10:
             raise TooManyBadRequests
