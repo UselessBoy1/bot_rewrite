@@ -143,7 +143,8 @@ class CommandBot(commands.Cog):
             await ctx.send(embed=embeds.too_many_bad_requests)
 
         elif isinstance(error, errors.NotEnoughMoney):
-            await ctx.send(embed=embeds.not_enough_money)
+            icon = discord.utils.get(ctx.guild.emojis, name="cpp")
+            await ctx.send(embed=embeds.not_enough_money(error.money, icon))
 
         elif isinstance(error, commands.errors.CommandNotFound):
             pass

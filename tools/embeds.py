@@ -13,7 +13,8 @@ school_class_cmd_on_different_channel = discord.Embed(title="Komenda klasy na ka
 
 too_many_bad_requests = discord.Embed(title="Bot ma za duzo BadRequest do API. Funkcja zostala chwilowo wylaczona", color=config.v['FAIL_COLOR'])
 
-not_enough_money = discord.Embed(title="Nie masz pieniedzy", description="Biedak...", color=config.v['FAIL_COLOR'])
+def not_enough_money(money: int, icon):
+    return discord.Embed(title=f"Nie masz pieniedzy", description=f"Potrzebujesz {icon} {money}", color=config.v['FAIL_COLOR'])
 
 def err(color_name="config", reason=""):
     key = f"{color_name.upper()}_COLOR"

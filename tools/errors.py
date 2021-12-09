@@ -4,4 +4,5 @@ class TooManyBadRequests(commands.CommandError):
     pass
 
 class NotEnoughMoney(commands.CommandError):
-    pass
+    def __init__(self, money):
+        self.money = money
