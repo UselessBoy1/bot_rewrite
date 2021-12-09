@@ -7,7 +7,7 @@ import json
 from discord_components import Button, ButtonStyle, InteractionEventType, Interaction
 
 from discord.ext import commands
-from tools import database, permissions, misc, lang, help, config, embeds, encryption
+from tools import database, permissions, misc, lang, help, config, embeds, encryption, errors
 
 class CommandBot(commands.Cog):
 
@@ -137,6 +137,8 @@ class CommandBot(commands.Cog):
     async def on_command_error(self, ctx :commands.Context, error):
         if isinstance(error, commands.errors.CheckFailure):
             await ctx.send(embed=embeds.permission_denied)
+        elif isinstance(error, errors.TooManyBadRequests):
+            await ctx.send(embed=embeds.too_many_bad_requests)
         elif isinstance(error, commands.errors.CommandNotFound):
             pass
         elif isinstance(error, commands.errors.MissingRequiredArgument):

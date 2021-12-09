@@ -5,7 +5,7 @@ import random
 import time
 
 from discord.ext import commands, tasks
-from tools import database, permissions, misc, lang, help, config, embeds, encryption
+from tools import database, permissions, misc, lang, help, config, embeds, encryption, errors
 
 
 class DominationBot(commands.Cog):
@@ -14,6 +14,8 @@ class DominationBot(commands.Cog):
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
+        self.bad_requests = 0
+        self.remove_bad_requests.start()
 
     #region CMD
     @commands.command("voice_ban")
@@ -78,26 +80,40 @@ class DominationBot(commands.Cog):
     @commands.command("fuck")
     @commands.check(permissions.is_admin)
     async def fuck_cmd(self, ctx, times: typing.Optional[int], members: commands.Greedy[discord.Member], flags=""):
+        if self.bad_requests > 10:
+            raise errors.TooManyBadRequests
         flags = [f.removeprefix('-') for f in flags.split(" ")]
         if help.is_it_help(flags):
             await ctx.send(embed=help.get_help_embed(self.bot, "fuck"))
             return
+        ignore_members = []#[permissions.dev]
         for i in range(times):
             for member in members:
-                if member.id == permissions.dev:
+                if member.id in ignore_members:
                     continue
                 if member is None:
                     continue
-                previous = member.voice.channel.id
+                if not misc.in_voice_channel(member):
+                    ignore_members.append(member)
+                    continue
+                try:
+                    previous = member.voice.channel.id
+                except AttributeError:
+                    ignore_members.append(member)
+                    continue
                 voice = random.choice(ctx.guild.voice_channels)
                 rnd_times = 100
                 while voice.id == previous and rnd_times > 0:
                     voice = random.choice(ctx.guild.voice_channels)
                     rnd_times -= 1
                 if misc.in_voice_channel(member):
-                    await member.move_to(voice)
-                previous = voice
-            time.sleep(0.5)
+                    try:
+                        await member.move_to(voice)
+                    except discord.HTTPException as he:
+                        ignore_members.append(member.id)
+                        self.bad_requests += 1
+                        misc.log(he)
+            time.sleep(0.8)
         await ctx.send("Fucked them!")
     #endregion
 
@@ -108,8 +124,10 @@ class DominationBot(commands.Cog):
                 await member.move_to(None)
 
     @tasks.loop(seconds=10)
-    async def check_queue(self):
+    async def remove_bad_requests(self):
         await self.bot.wait_until_ready()
+        if self.bad_requests > 0:
+            self.bad_requests -= 1
 
 
 

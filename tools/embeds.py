@@ -11,6 +11,8 @@ channel_not_mentioned = discord.Embed(title="Musisz oznaczyc kanal <#ID>", color
 
 school_class_cmd_on_different_channel = discord.Embed(title="Komenda klasy na kanale innym niz klasowy!", color=config.v['LINK_COLOR'])
 
+too_many_bad_requests = discord.Embed(title="Bot ma za duzo BadRequest do API. Funkcja zostala chwilowo wylaczona", color=config.v['FAIL_COLOR'])
+
 def err(color_name="config", reason=""):
     key = f"{color_name.upper()}_COLOR"
     if key not in config.v.keys():
