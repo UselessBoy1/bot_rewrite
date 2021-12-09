@@ -84,7 +84,7 @@ class DominationBot(commands.Cog):
         if self.bad_requests > 10:
             raise TooManyBadRequests
 
-        await money.take_money(ctx.guild, ctx.author, 1000, "Fuck command")
+        await money.take_money(ctx.guild, ctx.author, times * 1000, "Fuck command")
 
         flags = [f.removeprefix('-') for f in flags.split(" ")]
 
