@@ -5,7 +5,8 @@ import random
 import time
 
 from discord.ext import commands, tasks
-from tools import database, permissions, misc, lang, help, config, embeds, encryption, errors
+from tools import database, permissions, misc, lang, help, config, embeds, encryption, money
+from tools.errors import *
 
 
 class DominationBot(commands.Cog):
@@ -79,9 +80,12 @@ class DominationBot(commands.Cog):
 
     @commands.command("fuck")
     @commands.check(permissions.is_admin)
-    async def fuck_cmd(self, ctx, times: typing.Optional[int], members: commands.Greedy[discord.Member], flags=""):
+    async def fuck_cmd(self, ctx: commands.Context, times: typing.Optional[int], members: commands.Greedy[discord.Member], flags=""):
         if self.bad_requests > 10:
-            raise errors.TooManyBadRequests
+            raise TooManyBadRequests
+
+        await money.take_money(ctx.guild, ctx.author, 1000, "Fuck command")
+
         flags = [f.removeprefix('-') for f in flags.split(" ")]
         if help.is_it_help(flags):
             await ctx.send(embed=help.get_help_embed(self.bot, "fuck"))
