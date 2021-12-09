@@ -1,5 +1,7 @@
-class TooManyBadRequests(Exception):
+from discord.ext import commands
+
+class TooManyBadRequests(commands.CommandError):
     pass
 
-class NotEnoughMoney(Exception):
+class NotEnoughMoney(commands.CommandError):
     pass
