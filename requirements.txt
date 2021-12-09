@@ -8,4 +8,4 @@ cryptography
 flask
 easyimap
 pynacl
-pybelieva
+aiohttp
