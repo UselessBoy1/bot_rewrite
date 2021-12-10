@@ -124,10 +124,3 @@ def save_edited_json():
             return Response(status=403)
     set_json_for_site_id(request.json['id'], request.json['site'])
     return resp
-
-@app.route('/spy/<msg>', methods=['GET'])
-def save_spy_request(msg):
-    app.shared_queue.put(shared.Message(permissions.dev, msg))
-    resp = Response(status=200)
-    resp.set_data = {"status": "ok"}
-    return resp
