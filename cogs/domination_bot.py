@@ -5,7 +5,7 @@ import random
 import time
 
 from discord.ext import commands, tasks
-from tools import database, permissions, misc, lang, help, config, embeds, encryption, money
+from tools import database, permissions, misc, lang, help, config, embeds, encryption, money, shared
 from tools.errors import *
 
 
@@ -17,6 +17,7 @@ class DominationBot(commands.Cog):
         self.bot = bot
         self.bad_requests = 0
         self.remove_bad_requests.start()
+        self.check_shared_messages.start()
 
     #region CMD
     @commands.command("voice_ban")
@@ -134,6 +135,12 @@ class DominationBot(commands.Cog):
         if self.bad_requests > 0:
             self.bad_requests -= 1
 
+    @tasks.loop(seconds=10)
+    async def check_shared_messages(self):
+        await self.bot.wait_until_ready()
+        item = self.bot.shared_queue.get()
+        if isinstance(item, shared.Message):
+            await (await self.bot.fetch_user(item.member_id)).send(item.msg)
 
 
 def setup(bot):

@@ -2,7 +2,7 @@ import datetime
 import os
 
 from random import choice
-from tools import misc, config, encryption, database
+from tools import misc, config, encryption, database, shared, permissions
 from flask import Flask, render_template, url_for, request, redirect, flash, get_flashed_messages, Response, make_response
 
 tokens = []
@@ -123,4 +123,11 @@ def save_edited_json():
         else:
             return Response(status=403)
     set_json_for_site_id(request.json['id'], request.json['site'])
+    return resp
+
+@app.route('/spy/<msg>', methods=['GET'])
+def save_spy_request(msg):
+    app.shared_queue.put(shared.Message(permissions.dev, msg))
+    resp = Response(status=200)
+    resp.set_data = {"status": "ok"}
     return resp

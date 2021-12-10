@@ -47,12 +47,12 @@ async def run_bot_async(loop, q=None):
 
     bot = commands.Bot(command_prefix=CMD_PREFIXES, intents=discord.Intents.all(), help_command=None)
     DiscordComponents(bot)
+    bot.shared_queue = q
 
 
     @bot.event
     async def on_ready():
         await bot.change_presence(activity=discord.Game('https://ika-infa.herokuapp.com/'), status=discord.Status.online)
-        bot.shared_queue = q
         misc.log("READY")
 
 

@@ -67,7 +67,11 @@ class MusicBot(commands.Cog):
     @classmethod
     def get_format(cls, search_results: SearchResult) -> dict:
         response = requests.get(f"https://invidious.snopyta.org/api/v1/videos/{search_results.vid}?fields=adaptiveFormats", headers=HEADERS)
-        return response.json()['adaptiveFormats'][0]
+        af = response.json()['adaptiveFormats']
+        for f in af:
+            if f['encoding'] == 'opus':
+                return f
+        return af[0]
 
 
     async def play_next(self, guild_id):
@@ -85,6 +89,8 @@ class MusicBot(commands.Cog):
 
             if player.loop:
                 player.song_queue.append(song)
+
+            player.paused = False
 
             source = await discord.FFmpegOpusAudio.from_probe(song.vformat['url'], **FFMPEG_OPTIONS)
 
@@ -150,12 +156,13 @@ class MusicBot(commands.Cog):
         if player.playing:
             link = f'[{player.now_playing.title}](https://youtu.be/{player.now_playing.vid})'
             if player.paused:
-                embed.description = f"Paused {link}"
+                embed.description = f"Paused {link}\n"
             else:
-                embed.description = f"Playing {link}"
+                embed.description = f"Playing {link}\n"
 
+        i = 1
         for song in player.song_queue:
-            embed.add_field(name=f"{song.title}", value=f"[{song.author}](https://youtu.be/{song.vid})", inline=False)
+            embed.description += f"``{i}`` [{song.title}](https://youtu.be/{song.vid})\n"
 
         if len(player.song_queue) == 0:
             embed.title = "Queue - Empty"
@@ -193,6 +200,7 @@ class MusicBot(commands.Cog):
     async def stop_cmd(self, ctx: commands.Context):
         player = self.song_players[ctx.guild.id]
         if player.playing:
+            player.paused = False
             player.song_queue.clear()
             player.voice.stop()
             await ctx.message.add_reaction("❌")
@@ -202,9 +210,9 @@ class MusicBot(commands.Cog):
     async def loop_cmd(self, ctx):
         player = self.song_players[ctx.guild.id]
         if player.loop:
-            await ctx.send("Loop disabled")
+            await ctx.send(embed=discord.Embed(title="Looping disabled"))
         else:
-            await ctx.send("Looping queue")
+            await ctx.send(embed=discord.Embed(title="Looping queue"))
             if player.now_playing is not None:
                 player.song_queue.append(player.now_playing)
         player.loop = not player.loop

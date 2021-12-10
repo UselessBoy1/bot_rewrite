@@ -50,7 +50,7 @@ class Client:
         self._url = base_url
         self._version = version
         self._session = aiohttp.ClientSession(
-            headers={'Authorization': token}, loop=self._loop)
+            headers={'Authorization': token}, loop=self._loop, timeout=5)
         self.rate_limit = None
 
     def __del__(self):
