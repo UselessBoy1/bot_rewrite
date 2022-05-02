@@ -2,7 +2,7 @@ import datetime
 import os
 
 from random import choice
-from tools import misc, config, encryption, database, shared, permissions
+from tools import misc, config, encryption, database, shared, permissions, music
 from flask import Flask, render_template, url_for, request, redirect, flash, get_flashed_messages, Response, make_response
 
 tokens = []
@@ -110,6 +110,15 @@ def edit_site(id):
     site_json = get_json_for_site__id(id)
     return render_template("edit.html", site_json=site_json, site_id=id, new_site_id=get_id())
 
+@app.route('/yt', methods=['GET', 'POST'])
+def youtube():
+    return render_template("yt.html")
+
+@app.route('/download', methods=['POST'])
+def download_video():
+    vid = request.form['vid']
+    search = music.search(vid)
+    return render_template('download.html', adaptiveFormats=music.get_formats(search), search=search)
 
 @app.route('/save',  methods=['POST'])
 def save_edited_json():

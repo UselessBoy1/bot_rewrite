@@ -1,0 +1,10 @@
+article {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}
+
+input {
+    width: 80%;
+}

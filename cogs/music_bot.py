@@ -1,26 +1,11 @@
 import asyncio
 import discord
-import requests
-import typing
 
 from collections import deque
-from discord.ext import commands, tasks
-from tools import config, misc, embeds
+from discord.ext import commands
+from tools import config, misc, embeds, music
 
 FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-
-HEADERS = {
-    'authority': 'invidious.snopyta.org',
-    'cache-control': 'max-age=0',
-    'upgrade-insecure-requests': '1',
-    'user-agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Mobile Safari/537.36',
-    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-    'sec-fetch-site': 'none',
-    'sec-fetch-mode': 'navigate',
-    'sec-fetch-user': '?1',
-    'sec-fetch-dest': 'document',
-    'accept-language': 'pl-PL,pl;q=0.9,en-US;q=0.8,en;q=0.7'
-}
 
 
 class SearchResult:
@@ -52,26 +37,6 @@ class MusicBot(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.song_players = {}
-
-
-    @classmethod
-    def search(cls, title) -> typing.Optional[SearchResult]:
-        response = requests.get(f"https://invidious.snopyta.org/api/v1/search?q={title}&fields=type,title,videoId,author", headers=HEADERS)
-        json = response.json()
-        for film in json:
-            if film['type'] == 'video':
-                return SearchResult(film['videoId'], film['title'], film['author'])
-        return None
-
-
-    @classmethod
-    def get_format(cls, search_results: SearchResult) -> dict:
-        response = requests.get(f"https://invidious.snopyta.org/api/v1/videos/{search_results.vid}?fields=adaptiveFormats", headers=HEADERS)
-        af = response.json()['adaptiveFormats']
-        for f in af:
-            if f['encoding'] == 'opus':
-                return f
-        return af[0]
 
 
     async def play_next(self, guild_id):
@@ -115,7 +80,7 @@ class MusicBot(commands.Cog):
 
         search_msg = await ctx.send(embed=discord.Embed(title="Searching...", color=config.v['SEARCH_COLOR']))
         title = '+'.join(org_title.split())
-        search_results = self.search(title)
+        search_results = music.search(title)
 
         if search_results is None:
             embed = discord.Embed(
@@ -126,7 +91,7 @@ class MusicBot(commands.Cog):
             await search_msg.delete()
             return
 
-        vid_format = self.get_format(search_results)
+        vid_format = music.get_format(search_results)
         player = self.song_players[ctx.guild.id]
         if ctx.voice_client is None or ctx.author.voice.channel != ctx.voice_client.channel:
             await ctx.author.voice.channel.connect()

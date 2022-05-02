@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/view_style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <title>Download</title>
+</head>
+<body>
+    <article>
+        <a style="color: white" href="/yt">⬅ Wróć</a>
+        <h1>{{ search.title }}</h1>
+        <p>{{ search.author }}<br><a href="https://youtu.be/{{ search.vid }}">https://youtu.be/{{ search.vid }}</a></p>
+
+        {% for af in adaptiveFormats %}
+            <a href="{{ af.url }}">Bitrate: {{ af.bitrate }} - {{ af.type }}</a><br>
+        {% endfor %}
+
+        <p>If none of these works try downloading from (pls copy this link)
+            <a target="_blank" href="https://invidious.snopyta.org/watch?v={{ search.vid }}">https://invidious.snopyta.org/watch?v={{ search.vid }}
+            </a></p>
+
+        <div id="none"></div>
+    </article>
+    <div id="github" onclick="window.open('https://github.com/UselessBoy1/bot_rewrite')">
+        <img src="{{ url_for('static', filename='GitHub-Mark-Light-32px.png') }}"/><br>
+        Github
+    </div>
+    <script>
+        var site_json = {'site': []};
+    </script>
+    <div id="toast"></div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/yt.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='v0.1/css/view_style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <title>YT</title>
+</head>
+<body>
+    <article>
+        <h1>YT Downloader</h1>
+        <form action="/download" method="POST">
+            <input placeholder="https://youtu.be/dQw4w9WgXcQ or search query" name="vid">
+        </form>
+    </article>
+    <div id="github" onclick="window.open('https://github.com/UselessBoy1/bot_rewrite')">
+        <img src="{{ url_for('static', filename='GitHub-Mark-Light-32px.png') }}"/><br>
+        Github
+    </div>
+    <script>
+        var site_json = {'site': []};
+    </script>
+    <div id="toast"></div>
+</body>
+</html>
